@@ -1,0 +1,27 @@
+@import '../../../global';
+
+section {
+    @include scrollBar;
+    width: 100%;
+    height: calc(100vh - $topbarHeight);
+    display: flex;
+
+    & div {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: $widthMedium;
+        box-shadow: $shadow;
+
+        & button {
+            height: 35px;
+            @include button;
+        }
+
+        & input {
+            height: 35px;
+            @include input;
+        }
+    }
+}

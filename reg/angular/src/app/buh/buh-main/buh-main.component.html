@@ -1,0 +1,32 @@
+<section>
+    <table class="header">
+        <tr>
+            <th class="medium">Cagent</th>
+            <th class="large">Dest</th>
+            <th class="medium">Ipay</th>
+            <th class="small">Sum</th>
+            <th class="small">Control</th>
+            <th class="medium">Info</th>
+            <th class="medium">Buhpoint</th>
+            <th class="small">State</th>
+            <th class="small">Dcopy</th>
+            <th class="small">Dorig</th>
+            <th class="medium">Title</th>
+        </tr>
+    </table>
+    <table class="content">
+        <tr *ngFor="let row of table">
+            <td class="medium">{{cagent[row.cagent]}}</td>
+            <td class="large">{{row.dest}}</td>
+            <td class="medium">{{ipay[row.ipay]}}</td>
+            <td class="small">{{row.sum}}</td>
+            <td class="small">{{control[row.buhpoint]}}</td>
+            <td class="medium">{{dropdown.info[row.info]}}</td>
+            <td class="medium">{{dropdown.buhpoint[row.buhpoint]}}</td>
+            <td class="small">{{dropdown.state[row.state]}}</td>
+            <td class="small">{{row.dcopy}}</td>
+            <td class="small">{{row.dorig}}</td>
+            <td class="medium">{{row.title}}</td>
+        </tr>
+    </table>
+</section>
