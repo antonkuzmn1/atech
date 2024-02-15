@@ -1,25 +1,21 @@
-<!-- <div> -->
-<!-- <input type="file" (change)="onFileChange($event)"> -->
-<!-- <button (click)="convertToJSON()">Convert to JSON</button> -->
-<!-- </div> -->
-
 <section>
     <table class="header">
         <tr>
             <th class="small"></th>
-            <th class="medium"><input type="text" [(ngModel)]="sets.start"></th>
-            <th class="medium"><input type="text" [(ngModel)]="sets.stop"></th>
+            <th class="medium"><input type="text" [(ngModel)]="pp.start" (change)="convertToJSON()"></th>
+            <th class="medium"><input type="text" [(ngModel)]="pp.stop" (change)="convertToJSON()"></th>
             <th class="large"><input type="file" (change)="onFileChange($event)"></th>
-            <th class="medium"><button (click)="convertToJSON()">parse</button></th>
+            <th class="medium"></th>
+            <!-- <th class="medium"><button (click)="convertToJSON()">parse</button></th> -->
             <th class="small"></th>
         </tr>
         <tr>
             <th class="small"></th>
-            <th class="medium"><input type="text" [(ngModel)]="sets.inputDate"></th>
-            <th class="medium"><input type="text" [(ngModel)]="sets.contrAgent"></th>
-            <th class="large"><input type="text" [(ngModel)]="sets.paymentDestination"></th>
-            <th class="medium"><input type="text" [(ngModel)]="sets.initiatorOfPayment"></th>
-            <th class="small"><input type="text" [(ngModel)]="sets.sum"></th>
+            <th class="medium"><input type="text" [(ngModel)]="pp.inputDate" (change)="convertToJSON()"></th>
+            <th class="medium"><input type="text" [(ngModel)]="pp.contrAgent" (change)="convertToJSON()"></th>
+            <th class="large"><input type="text" [(ngModel)]="pp.paymentDestination" (change)="convertToJSON()"></th>
+            <th class="medium"><input type="text" [(ngModel)]="pp.initiatorOfPayment" (change)="convertToJSON()"></th>
+            <th class="small"><input type="text" [(ngModel)]="pp.sum" (change)="convertToJSON()"></th>
         </tr>
         <tr>
             <th class="small">Номер</th>

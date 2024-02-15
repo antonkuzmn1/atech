@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { BuhComponent } from './buh/buh.component';
-import { LogComponent } from './log/log.component';
-import { HomeComponent } from './home/home.component';
-import { BuhAuthComponent } from './buh/buh-auth/buh-auth.component';
-import { BuhMainComponent } from './buh/buh-main/buh-main.component';
 import { BuhAllComponent } from './buh/buh-all/buh-all.component';
+import { BuhAuthComponent } from './buh/buh-auth/buh-auth.component';
 import { BuhImportComponent } from './buh/buh-import/buh-import.component';
+import { BuhMainComponent } from './buh/buh-main/buh-main.component';
+import { BuhComponent } from './buh/buh.component';
+import { HomeComponent } from './home/home.component';
+import { LogComponent } from './log/log.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },

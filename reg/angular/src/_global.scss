@@ -71,8 +71,8 @@ $topbarHeight: 35px;
     }
 
     &:active {
-        background-color: white;
-        color: black;
+        background-color: $blueHover;
+        // color: black;
     }
 }
 
@@ -119,9 +119,9 @@ $topbarHeight: 35px;
     @include buttonAction;
 
     &.active {
-        box-shadow: inset $shadow;
-        // background-color: ;
-        @include gradientAnimation($blue, $blueHover, $blueHover, $blueHover);
+        // box-shadow: inset $shadow;
+        background-color: $blueHover;
+        // @include gradientAnimation($blue, $blueHover, $blueHover, $blueHover);
     }
 }
 

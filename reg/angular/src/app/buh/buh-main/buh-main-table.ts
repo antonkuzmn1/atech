@@ -11,6 +11,6 @@ export class BuhMainTable {
         public state: number,
         public dcopy: Date | null,
         public dorig: Date | null,
-        public title: string, 
+        public title: string,
     ) {}
 }
