@@ -38,6 +38,7 @@ $topbarHeight: 35px;
     background-color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 12px;
+    padding: 0;
 
     @include width;
 }
@@ -124,6 +125,34 @@ $topbarHeight: 35px;
     }
 }
 
+@mixin buttonTable {
+    align-items: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    font-weight: lighter;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    white-space: nowrap;
+    color: black;
+    background-color: white;
+
+    &:hover {
+        background-color: $whiteHover;
+    }
+
+    &:active {
+        background-color: $whiteFocus;
+    }
+}
+
 @mixin topbar {
     background-color: $blue;
     height: $topbarHeight;
@@ -162,6 +191,15 @@ $topbarHeight: 35px;
                 & th {
                     height: $topbarHeight;
                     @include cell;
+
+                    & input {
+                        @include input;
+                        height: 100%;
+                    }
+
+                    & button {
+                        @include buttonTable;
+                    }
                 }
             }
         }

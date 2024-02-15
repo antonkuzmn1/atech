@@ -1,1 +1,43 @@
-<p>buh-import works!</p>
+<!-- <div> -->
+<!-- <input type="file" (change)="onFileChange($event)"> -->
+<!-- <button (click)="convertToJSON()">Convert to JSON</button> -->
+<!-- </div> -->
+
+<section>
+    <table class="header">
+        <tr>
+            <th class="small"></th>
+            <th class="medium"><input type="text" [(ngModel)]="sets.start"></th>
+            <th class="medium"><input type="text" [(ngModel)]="sets.stop"></th>
+            <th class="large"><input type="file" (change)="onFileChange($event)"></th>
+            <th class="medium"><button (click)="convertToJSON()">parse</button></th>
+            <th class="small"></th>
+        </tr>
+        <tr>
+            <th class="small"></th>
+            <th class="medium"><input type="text" [(ngModel)]="sets.inputDate"></th>
+            <th class="medium"><input type="text" [(ngModel)]="sets.contrAgent"></th>
+            <th class="large"><input type="text" [(ngModel)]="sets.paymentDestination"></th>
+            <th class="medium"><input type="text" [(ngModel)]="sets.initiatorOfPayment"></th>
+            <th class="small"><input type="text" [(ngModel)]="sets.sum"></th>
+        </tr>
+        <tr>
+            <th class="small">Номер</th>
+            <th class="medium">Вх.дата</th>
+            <th class="medium">Получатель</th>
+            <th class="large">Назначение платежа</th>
+            <th class="medium">Инициатор по договору</th>
+            <th class="small">Сумма</th>
+        </tr>
+    </table>
+    <table class="content">
+        <tr *ngFor="let row of firstAndLastRows">
+            <td class="small">{{row.index}}</td>
+            <td class="medium">{{dateToString(row.row.inputDate)}}</td>
+            <td class="medium">{{row.row.contrAgent}}</td>
+            <td class="large">{{row.row.paymentDestination}}</td>
+            <td class="medium">{{row.row.initiatorOfPayment}}</td>
+            <td class="small">{{row.row.sum}}</td>
+        </tr>
+    </table>
+</section>
