@@ -14,7 +14,7 @@
 	<!-- 优质的 spring/boot/data/security/cloud 框架中文文档尽在 => https://springdoc.cn -->
 	<groupId>atech.reg</groupId>
 	<artifactId>atech-reg-backend</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>atech-reg-backend</name>
 	<description>atech's registry backend application</description>
 	<properties>
