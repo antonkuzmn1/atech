@@ -3,6 +3,6 @@
     <a routerLink="/buh/auth" routerLinkActive="active">Авторизация</a>
     <a routerLink="/buh/main" routerLinkActive="active">Основной реестр</a>
     <a routerLink="/buh/all" routerLinkActive="active">Пользовательский реестр</a>
-    <a routerLink="/buh/import" routerLinkActive="active">Импорт из 1С</a>
+    <a *ngIf="allow()" routerLink="/buh/import" routerLinkActive="active">Импорт из 1С</a>
 </section>
 <router-outlet></router-outlet>

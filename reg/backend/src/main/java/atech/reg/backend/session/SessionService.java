@@ -29,4 +29,9 @@ public class SessionService {
         List<Long> list = userService.authUser(jsonString);
         session.setAttribute("groups", list);
     }
+
+    public void logout(HttpSession session) {
+        session.setAttribute("groups", new ArrayList<>());
+    }
+
 }

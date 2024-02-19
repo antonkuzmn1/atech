@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-home',
@@ -15,19 +16,16 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   constructor(
-    // private be: BackendService,
+    private session: SessionService,
   ) { }
-  buhAllow: boolean = false;
 
   ngOnInit(): void {
-    // this.be.sessionCheck().subscribe({
-      // next: (data: number) => {
-        // switch (data) {
-          // case 1:
-          // case 2: this.buhAllow = true; break;
-          // default: this.buhAllow = false;
-        // }
-      // }
-    // });
+    this.session.get();
+  }
+
+  allow(): boolean {
+    return this.session.groups.some(id =>
+      id === 1 ||
+      id === 2);
   }
 }

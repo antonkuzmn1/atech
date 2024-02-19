@@ -20,14 +20,19 @@ public class SessionController {
         this.service = service;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<Long> get(HttpSession session) {
         return service.get(session);
     }
 
     @PostMapping("/auth")
     public void auth(HttpSession session, @RequestBody String jsonString) {
-        auth(session, jsonString);
+        service.auth(session, jsonString);
+    }
+
+    @GetMapping("/logout")
+    public void logout(HttpSession session) {
+        service.logout(session);
     }
 
 }

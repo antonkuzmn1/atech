@@ -2,7 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputDirective } from '../../input.directive';
-import { BuhAuthSession } from './buh-auth-session';
+import { SessionService } from '../../session.service';
 
 @Component({
   selector: 'app-buh-auth',
@@ -16,45 +16,29 @@ import { BuhAuthSession } from './buh-auth-session';
   styleUrl: './buh-auth.component.scss'
 })
 export class BuhAuthComponent implements OnInit {
+
   constructor(
-    // private be: BackendService,
+    private session: SessionService,
   ) { }
-  form: BuhAuthSession = new BuhAuthSession;
-  level: number = 0;
+  login: string = "";
+  password: string = "";
 
   ngOnInit(): void {
-    // this.be.sessionCheck().subscribe({
-      // next: (data: number) => {
-        // this.level = data;
-        // console.log(this.level);
-      // }
-    // });
+    this.session.get()
   }
-  allow(): boolean {
-    switch (this.level) {
-      case 1:
-      case 2: return true;
-      default: return false;
-    }
-  }
-  auth(): void {
-    this.form.action = "auth";
-    // this.be.sessionAuth(this.form).subscribe({
-    //   next: (data: number) => {
-    //     this.level = data;
-    //     console.log(this.level);
-    //   }
-    // });
-  }
-  logout(): void {
-    // this.be.sessionLogout().subscribe({ next: (data: number) => this.level = data });
-  }
-  test() {
-    // this.be.test().subscribe({
-    //   next: (data: any) => {
-    //     console.log(data);
-    //   }
-    // });
-  }
-}
 
+  allow(): boolean {
+    return this.session.groups.some(id =>
+      id === 1 ||
+      id === 2);
+  }
+
+  auth(): void {
+    this.session.auth({ login: this.login, password: this.password })
+  }
+
+  logout(): void {
+    this.session.logout()
+  }
+
+}
