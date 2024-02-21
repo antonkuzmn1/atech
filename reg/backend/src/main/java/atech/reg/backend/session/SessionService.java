@@ -3,6 +3,7 @@ package atech.reg.backend.session;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import atech.reg.backend.session.user.UserService;
@@ -11,11 +12,8 @@ import jakarta.servlet.http.HttpSession;
 @Service
 public class SessionService {
 
-    private final UserService userService;
-
-    public SessionService(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     @SuppressWarnings("unchecked")
     public List<Long> get(HttpSession session) {

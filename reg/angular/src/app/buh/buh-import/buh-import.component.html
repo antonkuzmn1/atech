@@ -5,9 +5,8 @@
             <th class="medium"><input type="text" [(ngModel)]="pp.start" (change)="convertToJSON()"></th>
             <th class="medium"><input type="text" [(ngModel)]="pp.stop" (change)="convertToJSON()"></th>
             <th class="large"><input type="file" (change)="onFileChange($event)"></th>
-            <th class="medium"></th>
-            <!-- <th class="medium"><button (click)="convertToJSON()">parse</button></th> -->
-            <th class="small"></th>
+            <th class="medium"><button *ngIf="jsonData.length" (click)="upload()">Применить</button></th>
+            <th class="small">total: {{insertedRows}}</th>
         </tr>
         <tr>
             <th class="small"></th>

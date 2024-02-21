@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { BuhImportParserParams } from './buh-import-parser-params';
+import { BuhImportResult } from './buh-import-result';
+import { BuhImportRow } from './buh-import-row';
+import { BuhImportService } from './buh-import.service';
 
 @Component({
   selector: 'app-buh-import',
@@ -16,16 +19,17 @@ import { BuhImportParserParams } from './buh-import-parser-params';
   styleUrl: './buh-import.component.scss'
 })
 export class BuhImportComponent implements OnInit {
+  constructor(
+    private service: BuhImportService,
+  ) { }
+  file!: File;
+  jsonData: BuhImportRow[] = [];
+  firstAndLastRows: { index: number, row: any }[] = [];
+  pp = new BuhImportParserParams();
+  insertedRows: number = 0;
 
   ngOnInit(): void {
-    console.log('success')
   }
-
-  file!: File;
-  jsonData: any[] = [];
-  firstAndLastRows: { index: number, row: any }[] = [];
-  test: string = 'test';
-  pp = new BuhImportParserParams();
 
   onFileChange(event: any) {
     this.file = event.target.files[0];
@@ -78,20 +82,8 @@ export class BuhImportComponent implements OnInit {
                 throw new Error()
               };
               if (typeof sum !== 'number') throw new Error();
-              interface Row {
-                inputDate: Date,
-                contrAgent: string,
-                paymentDestination: string,
-                initiatorOfPayment: string,
-                sum: number,
-              }
-              const row: Row = {
-                inputDate: inputDate,
-                contrAgent: contrAgent,
-                paymentDestination: paymentDestination,
-                initiatorOfPayment: initiatorOfPayment,
-                sum: sum,
-              };
+
+              const row: BuhImportRow = new BuhImportRow(inputDate, contrAgent, paymentDestination, initiatorOfPayment, sum,);
               this.jsonData.push(row);
             } catch (e) { throw new Error('o kurwa') }
           }
@@ -106,7 +98,6 @@ export class BuhImportComponent implements OnInit {
               index: i + parseInt(this.pp.start),
               row: this.jsonData[i],
             });
-          console.log(this.jsonData);
         }
       } catch (e) {
         this.jsonData = [];
@@ -124,4 +115,14 @@ export class BuhImportComponent implements OnInit {
     return `${day} ${month} ${year} г.`;
   }
 
+  upload(): void {
+    this.service.upload(this.jsonData).subscribe({
+      next: (result: BuhImportResult) => {
+        console.log(result);
+        this.insertedRows = result.insertedRows;
+        this.jsonData = [];
+        this.firstAndLastRows = [];
+      }
+    });
+  }
 }

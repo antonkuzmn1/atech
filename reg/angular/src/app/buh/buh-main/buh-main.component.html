@@ -1,32 +1,126 @@
 <section>
     <table class="header">
+        <tr *ngIf="isChanged">
+            <th class="medium"><button (click)="submit()">Применить</button></th>
+            <th class="large"></th>
+            <th class="medium"></th>
+            <th class="small"></th>
+            <th class="small"></th>
+            <th class="small"></th>
+            <th class="medium"></th>
+            <th class="medium"></th>
+            <th class="small"></th>
+            <th class="small"></th>
+            <th class="small"></th>
+            <th class="medium"></th>
+        </tr>
         <tr>
-            <th class="medium">Cagent</th>
-            <th class="large">Dest</th>
-            <th class="medium">Ipay</th>
-            <th class="small">Sum</th>
-            <th class="small">Control</th>
-            <th class="medium">Info</th>
-            <th class="medium">Buhpoint</th>
-            <th class="small">State</th>
-            <th class="small">Dcopy</th>
-            <th class="small">Dorig</th>
-            <th class="medium">Title</th>
+            <th class="medium">
+                <button (click)="filterToggle(0)">Контрагент</button>
+                <div class="filter" *ngIf="filterIsOpened[0]">
+                    <button  *ngFor="let c of contractors">{{c.name}}</button>
+                    <button>Применить</button>
+                    <button>Сбросить</button>
+                </div>
+            </th>
+            <th class="large">
+                <button (click)="filterToggle(1)">Назначение</button>
+                <div *ngIf="filterIsOpened[1]">JOPA</div>
+            </th>
+            <th class="medium">
+                <button (click)="filterToggle(2)">Инициатор</button>
+                <div *ngIf="filterIsOpened[2]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(3)">Сумма</button>
+                <div *ngIf="filterIsOpened[3]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(4)">Закр.сумма</button>
+                <div *ngIf="filterIsOpened[4]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(5)">Контроль</button>
+                <div *ngIf="filterIsOpened[5]">JOPA</div>
+            </th>
+            <th class="medium">
+                <button (click)="filterToggle(6)">Информация</button>
+                <div *ngIf="filterIsOpened[6]">JOPA</div>
+            </th>
+            <th class="medium">
+                <button (click)="filterToggle(7)">Отметка</button>
+                <div *ngIf="filterIsOpened[7]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(8)">Статус</button>
+                <div *ngIf="filterIsOpened[8]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(9)">Дата копии</button>
+                <div *ngIf="filterIsOpened[9]">JOPA</div>
+            </th>
+            <th class="small">
+                <button (click)="filterToggle(10)">Дата ориг-ла</button>
+                <div *ngIf="filterIsOpened[10]">JOPA</div>
+            </th>
+            <th class="medium">
+                <button (click)="filterToggle(11)">Комментарий</button>
+                <div *ngIf="filterIsOpened[11]">JOPA</div>
+            </th>
         </tr>
     </table>
     <table class="content">
         <tr *ngFor="let row of table">
-            <td class="medium">{{cagent[row.cagent]}}</td>
-            <td class="large">{{row.dest}}</td>
-            <td class="medium">{{ipay[row.ipay]}}</td>
+            <td class="medium">{{row.contractor.name}}</td>
+            <td class="large">{{row.destination}}</td>
+            <td class="medium">{{row.initiator ? row.initiator.name : ""}}</td>
             <td class="small">{{row.sum}}</td>
-            <td class="small">{{control[row.buhpoint]}}</td>
-            <td class="medium">{{dropdown.info[row.info]}}</td>
-            <td class="medium">{{dropdown.buhpoint[row.buhpoint]}}</td>
-            <td class="small">{{dropdown.state[row.state]}}</td>
-            <td class="small">{{row.dcopy}}</td>
-            <td class="small">{{row.dorig}}</td>
-            <td class="medium">{{row.title}}</td>
+            <td class="small">
+                <input type="number" (change)="onChange(row, 'sumClosing')" [(ngModel)]="row.sumClosing"
+                    [ngClass]="{'changed': row.isChanged_sumClosing}">
+            </td>
+            <td class="small">{{dd.control[control(row)].text}}</td>
+            <td class="medium">
+                <select [ngClass]="{'changed': row.isChanged_about}" (change)="onChange(row, 'about', $event.target)">
+                    <option *ngFor="let d of dd.about" [value]="d.id" [selected]="d.id === row.about.id">{{d.text}}
+                    </option>
+                </select>
+            </td>
+            <td class="medium">
+                <ng-container *ngIf="allow(); else notAllow">
+                    <select [ngClass]="{'changed': row.isChanged_mark}" (change)="onChange(row, 'mark', $event.target)">
+                        <option *ngFor="let d of dd.mark" [value]="d.id" [selected]="d.id === row.mark.id">{{d.text}}
+                        </option>
+                    </select>
+                </ng-container>
+                <ng-template #notAllow>{{row.mark.text}}</ng-template>
+            </td>
+            <td class="small">
+                <select [ngClass]="{'changed': row.isChanged_status}" (change)="onChange(row, 'status', $event.target)">
+                    <option *ngFor="let d of dd.status" [value]="d.id" [selected]="d.id === row.status.id">{{d.text}}
+                    </option>
+                </select>
+            </td>
+            <td class="date-picker">
+                <button (click)="toggle(row, true)" [ngClass]="{'changed': row.isChanged_copyDate}">
+                    {{row.copyDate | date: 'dd MMM yyyy'}}
+                </button>
+                <div *ngIf="row.isActive_copyDate">
+                    <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, true)" />
+                </div>
+            </td>
+            <td class="date-picker">
+                <button (click)="toggle(row, false)" [ngClass]="{'changed': row.isChanged_origDate}">
+                    {{row.origDate | date: 'dd MMM yyyy'}}
+                </button>
+                <div *ngIf="row.isActive_origDate">
+                    <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, false)" />
+                </div>
+            </td>
+            <td class="medium">
+                <input type="text" (change)="onChange(row, 'title')" [(ngModel)]="row.title"
+                    [ngClass]="{'changed': row.isChanged_title}">
+            </td>
         </tr>
     </table>
 </section>

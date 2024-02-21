@@ -89,6 +89,10 @@ $topbarHeight: 35px;
     &::placeholder {
         color: $whitePlaceholder;
     }
+
+    &.changed {
+        background-color: yellow;
+    }
 }
 
 @mixin input {
@@ -123,6 +127,27 @@ $topbarHeight: 35px;
         background-color: $blueHover;
         // @include gradientAnimation($blue, $blueHover, $blueHover, $blueHover);
     }
+
+    &.checked {
+        background-color: $blueHover;
+    }
+}
+
+@mixin select {
+    // width: 100%;
+    // height: 100%;
+    background-color: white;
+    appearance: none;
+    // @include input;
+    // border: 0;
+    // outline: 0;
+    // background: none;
+    // color: inherit;
+    // box-shadow: none;
+    // padding: 0;
+    &.changed {
+        background-color: yellow;
+    }
 }
 
 @mixin buttonTable {
@@ -151,6 +176,10 @@ $topbarHeight: 35px;
     &:active {
         background-color: $whiteFocus;
     }
+
+    &.changed {
+        background-color: yellow;
+    }
 }
 
 @mixin topbar {
@@ -166,6 +195,25 @@ $topbarHeight: 35px;
     & button,
     & form {
         @include button;
+    }
+}
+
+@mixin datePicker {
+    position: relative;
+    div {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+        display: block;
+        z-index: 1;
+    }
+    
+    button {
+        @include buttonTable;
+        width: 100px;
     }
 }
 
@@ -190,6 +238,7 @@ $topbarHeight: 35px;
             & tr {
                 & th {
                     height: $topbarHeight;
+                    position: relative;
                     @include cell;
 
                     & input {
@@ -200,6 +249,29 @@ $topbarHeight: 35px;
                     & button {
                         @include buttonTable;
                     }
+
+                    & select {
+                        @include select;
+                        @include input;
+                        height: 100%;
+                    }
+
+                    & div.filter {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        background-color: #fff;
+                        border: 1px solid #ccc;
+                        padding: 5px;
+                        display: block;
+                        z-index: 1;
+                        overflow-x: auto;
+                        overflow-x: auto;
+                        max-height: 50vh;
+                        max-width: calc(100vw - 10px);
+
+                        @include scrollBar;
+                    }
                 }
             }
         }
@@ -209,6 +281,26 @@ $topbarHeight: 35px;
                 & td {
                     height: 75px;
                     @include cell;
+
+                    & input {
+                        @include input;
+                        height: 100%;
+                    }
+
+                    & button {
+                        @include buttonTable;
+                    }
+
+                    & select {
+                        @include select;
+                        @include input;
+                        height: 100%;
+                    }
+                }
+
+                & td.date-picker {
+                    height: 75px;
+                    @include datePicker;
                 }
             }
         }

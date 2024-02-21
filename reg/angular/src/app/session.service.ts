@@ -9,7 +9,7 @@ export class SessionService {
         private http: HttpClient,
         private globalVariables: GlobalVariables,
     ) { }
-    private url: string = this.globalVariables.backend + "session";
+    private url: string = this.globalVariables.auto() + "session";
     private headers: { headers: HttpHeaders } = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     }

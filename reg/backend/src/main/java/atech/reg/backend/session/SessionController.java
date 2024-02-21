@@ -2,6 +2,7 @@ package atech.reg.backend.session;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +15,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/session")
 public class SessionController {
 
-    private final SessionService service;
-
-    public SessionController(SessionService service) {
-        this.service = service;
-    }
+    @Autowired
+    private SessionService service;
 
     @GetMapping
     public List<Long> get(HttpSession session) {

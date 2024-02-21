@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SessionService } from '../session.service';
 
@@ -15,7 +15,7 @@ import { SessionService } from '../session.service';
   templateUrl: './buh.component.html',
   styleUrl: './buh.component.scss'
 })
-export class BuhComponent {
+export class BuhComponent implements OnInit {
   constructor(
     private session: SessionService,
   ) { }
@@ -29,17 +29,5 @@ export class BuhComponent {
       id === 1 ||
       id === 2);
   }
-
-  // allow(): Promise<boolean> {
-  //   return new Promise<boolean>((resolve, reject) => {
-  //     this.session.get().then((data: number[]) => {
-  //       // const allo = data.some(id =>
-  //       //   id === 1 ||
-  //       //   id === 2);
-  //       // if (allo) resolve(true);
-  //       // else resolve(false);
-  //     });
-  //   });
-  // }
 
 }

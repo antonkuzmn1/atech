@@ -2,9 +2,12 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class GlobalVariables {
-    private address = {
-        server: "192.168.250.140",
-        local: "localhost"
+
+    public auto(): string {
+        if (window.location.origin === "http://localhost:4200") return "http://localhost:8080/api/";
+        else return (window.location.origin + "/api/");
     }
-    public backend: string = "http://" + this.address.local + ":8080/";
+
+    public cookie: { withCredentials: boolean } = { withCredentials: true };
+
 }
