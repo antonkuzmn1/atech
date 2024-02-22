@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskDirective } from 'ngx-mask';
 import { BuhDropdownList } from '../buh-dropdown-list';
+import { BuhEntityIdNameBool } from '../buh-entity-id-name-bool';
 import { BuhMainFilter } from './buh-main-filter';
 import { BuhMainTable } from './buh-main-table';
 import { BuhMainService } from './buh-main.service';
@@ -32,11 +33,12 @@ export class BuhMainComponent implements OnInit {
     private service: BuhMainService,
     public filter: BuhMainFilter
   ) { }
+
   table: BuhMainTable[] = []
   editedRows: BuhMainTable[] = []
   dd: BuhDropdownList = new BuhDropdownList()
-  contractors: { id: number, name: string }[] = []
-  initiators: { id: number, name: string }[] = []
+  contractors: BuhEntityIdNameBool[] = []
+  initiators: BuhEntityIdNameBool[] = []
   isChanged: boolean = false
   filterIsOpened: boolean[] = [false, false, false, false, false, false, false, false, false, false, false, false]
 
@@ -52,8 +54,14 @@ export class BuhMainComponent implements OnInit {
       }
     })
     this.service.getContractors().subscribe({
-      next: (data: {id: number, name: string}[]) => {
-        this.contractors = data
+      next: (data: { id: number, name: string }[]) => {
+        this.contractors = []
+        data.map((item) => {
+          if (this.contractorIsChecked(item.id))
+            this.contractors.push({ id: item.id, name: item.name, isChecked: true })
+          else
+            this.contractors.push({ id: item.id, name: item.name, isChecked: false })
+        })
         this.contractors.sort((a, b) => {
           if (a.name < b.name) return -1
           if (a.name > b.name) return 1
@@ -62,8 +70,8 @@ export class BuhMainComponent implements OnInit {
       }
     })
     this.service.getInitiators().subscribe({
-      next: (data: {id: number, name: string}[]) => {
-        this.initiators = data
+      next: (data: { id: number, name: string }[]) => {
+        // this.initiators = data
         this.initiators.sort((a, b) => {
           if (a.name < b.name) return -1
           if (a.name > b.name) return 1
@@ -185,8 +193,14 @@ export class BuhMainComponent implements OnInit {
     this.filterIsOpened[key] = !this.filterIsOpened[key]
   }
 
-  contractorToggle(id: number) {
+  contractorFilterConfirm() {
+    this.filter.contractor = []
+    this.contractors.map((item) => {if (item.isChecked) this.filter.contractor.push(item.id)})
+    this.service.get().subscribe({next: (data: BuhMainTable[]) => this.table = data})
+  }
 
+  contractorIsChecked(id: number) {
+    return this.filter.contractor.includes(id)
   }
 
 }

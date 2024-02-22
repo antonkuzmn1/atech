@@ -68,11 +68,12 @@ $topbarHeight: 35px;
 
     &:hover {
         background-color: $blueHover;
+        color: white;
     }
 
     &:active {
         background-color: $blueHover;
-        // color: black;
+        color: white;
     }
 }
 
@@ -125,11 +126,13 @@ $topbarHeight: 35px;
     &.active {
         // box-shadow: inset $shadow;
         background-color: $blueHover;
+        color: white;
         // @include gradientAnimation($blue, $blueHover, $blueHover, $blueHover);
     }
 
     &.checked {
         background-color: $blueHover;
+        color: white;
     }
 }
 
@@ -138,6 +141,7 @@ $topbarHeight: 35px;
     // height: 100%;
     background-color: white;
     appearance: none;
+
     // @include input;
     // border: 0;
     // outline: 0;
@@ -200,6 +204,7 @@ $topbarHeight: 35px;
 
 @mixin datePicker {
     position: relative;
+
     div {
         position: absolute;
         top: 100%;
@@ -210,7 +215,7 @@ $topbarHeight: 35px;
         display: block;
         z-index: 1;
     }
-    
+
     button {
         @include buttonTable;
         width: 100px;
@@ -262,15 +267,38 @@ $topbarHeight: 35px;
                         left: 0;
                         background-color: #fff;
                         border: 1px solid #ccc;
-                        padding: 5px;
+                        // padding: 5px;
                         display: block;
                         z-index: 1;
                         overflow-x: auto;
                         overflow-x: auto;
-                        max-height: 50vh;
+                        height: 50vh;
                         max-width: calc(100vw - 10px);
-
                         @include scrollBar;
+                        resize: both;
+
+                        & div.list {
+                            padding: 5px;
+                            @include inputAction;
+
+                            & label {
+                                width: calc(100% - 20px);
+                            }
+
+                            & input {
+                                width: 20px;
+                            }
+                        }
+
+                        & div.tools {
+                            background-color: #23a6d5;
+                            position: sticky;
+                            z-index: 1;
+                            bottom: 0;
+                            & button {
+                                @include button;
+                            }
+                        }
                     }
                 }
             }

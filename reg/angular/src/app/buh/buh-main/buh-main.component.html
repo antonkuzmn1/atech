@@ -18,9 +18,14 @@
             <th class="medium">
                 <button (click)="filterToggle(0)">Контрагент</button>
                 <div class="filter" *ngIf="filterIsOpened[0]">
-                    <button  *ngFor="let c of contractors">{{c.name}}</button>
-                    <button>Применить</button>
-                    <button>Сбросить</button>
+                    <div class="list" *ngFor="let c of contractors">
+                        <input [(ngModel)]="c.isChecked" id="{{c.id}}" type="checkbox">
+                        <label for="{{c.id}}">{{c.name}}</label>
+                    </div>
+                    <div class="tools">
+                        <button (click)="contractorFilterConfirm()">Применить</button>
+                        <button>Сбросить</button>
+                    </div>
                 </div>
             </th>
             <th class="large">
