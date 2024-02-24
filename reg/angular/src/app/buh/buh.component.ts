@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { SessionService } from '../session.service';
+import { SessionService } from '../common/session.service';
 
 @Component({
   selector: 'app-buh',
@@ -13,7 +13,7 @@ import { SessionService } from '../session.service';
     NgIf,
   ],
   templateUrl: './buh.component.html',
-  styleUrl: './buh.component.scss'
+  styleUrl: '../../_styles/components/buh.scss'
 })
 export class BuhComponent implements OnInit {
   constructor(
@@ -24,10 +24,6 @@ export class BuhComponent implements OnInit {
     this.session.get();
   }
 
-  allow(): boolean {
-    return this.session.groups.some(id =>
-      id === 1 ||
-      id === 2);
-  }
+  allow(): boolean { return this.session.allow([2]) }
 
 }

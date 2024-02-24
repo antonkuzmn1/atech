@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GlobalVariables } from "../global-variables";
-import { BuhDropdownList } from "./buh-dropdown-list";
+import { GlobalVariables } from "../common/backend.config";
+import { BuhDropdownList } from "./classes/buh-dropdown-list";
 
 @Injectable({providedIn: 'root'})
 export class BuhService {

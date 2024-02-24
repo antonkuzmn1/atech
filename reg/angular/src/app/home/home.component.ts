@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { SessionService } from '../session.service';
+import { SessionService } from '../common/session.service';
 
 @Component({
   selector: 'app-home',
@@ -11,21 +11,14 @@ import { SessionService } from '../session.service';
     RouterLink,
     NgIf,
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  templateUrl: 'home.component.html',
+  styleUrl: '../../_styles/components/home.scss'
 })
 export class HomeComponent implements OnInit {
   constructor(
     private session: SessionService,
   ) { }
 
-  ngOnInit(): void {
-    this.session.get();
-  }
-
-  allow(): boolean {
-    return this.session.groups.some(id =>
-      id === 1 ||
-      id === 2);
-  }
+  ngOnInit(): void { this.session.get() }
+  allow(): boolean { return this.session.allow([2]) }
 }

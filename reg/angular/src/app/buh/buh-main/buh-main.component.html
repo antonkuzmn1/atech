@@ -24,35 +24,60 @@
                     </div>
                     <div class="tools">
                         <button (click)="contractorFilterConfirm()">Применить</button>
-                        <button>Сбросить</button>
+                        <button (click)="contractorFilterReset()">Сбросить</button>
                     </div>
                 </div>
             </th>
             <th class="large">
                 <button (click)="filterToggle(1)">Назначение</button>
-                <div *ngIf="filterIsOpened[1]">JOPA</div>
+                <div class="filter" *ngIf="filterIsOpened[1]">
+                    <input [(ngModel)]="filter.destination" type="text" placeholder="поиск">
+                    <div class="tools">
+                        <button (click)="tableUpdate()">Применить</button>
+                    </div>
+                </div>
             </th>
             <th class="medium">
                 <button (click)="filterToggle(2)">Инициатор</button>
-                <div *ngIf="filterIsOpened[2]">JOPA</div>
+                <div class="filter" *ngIf="filterIsOpened[2]">
+                    <div class="list" *ngFor="let i of initiators">
+                        <input [(ngModel)]="i.isChecked" id="{{i.id}}" type="checkbox">
+                        <label for="{{i.id}}">{{i.name}}</label>
+                    </div>
+                    <div class="tools">
+                        <button (click)="initiatorFilterConfirm()">Применить</button>
+                        <button (click)="initiatorFilterReset()">Сбросить</button>
+                    </div>
+                </div>
             </th>
             <th class="small">
                 <button (click)="filterToggle(3)">Сумма</button>
-                <div *ngIf="filterIsOpened[3]">JOPA</div>
+                <div class="filter" *ngIf="filterIsOpened[3]">
+                    <input [(ngModel)]="filter.sum.from" type="number" placeholder="поиск">
+                    <input [(ngModel)]="filter.sum.to" type="number" placeholder="поиск">
+                    <div class="tools">
+                        <button (click)="tableUpdate()">Применить</button>
+                    </div>
+                </div>
             </th>
             <th class="small">
                 <button (click)="filterToggle(4)">Закр.сумма</button>
-                <div *ngIf="filterIsOpened[4]">JOPA</div>
+                <div class="filter" *ngIf="filterIsOpened[4]">
+                    <input [(ngModel)]="filter.sumClosing.from" type="number" placeholder="поиск">
+                    <input [(ngModel)]="filter.sumClosing.to" type="number" placeholder="поиск">
+                    <div class="tools">
+                        <button (click)="tableUpdate()">Применить</button>
+                    </div>
+                </div>
             </th>
             <th class="small">
-                <button (click)="filterToggle(5)">Контроль</button>
-                <div *ngIf="filterIsOpened[5]">JOPA</div>
+                Контроль
             </th>
-            <th class="medium">
+            <th class="small">
                 <button (click)="filterToggle(6)">Информация</button>
                 <div *ngIf="filterIsOpened[6]">JOPA</div>
             </th>
-            <th class="medium">
+            <th class="small">
                 <button (click)="filterToggle(7)">Отметка</button>
                 <div *ngIf="filterIsOpened[7]">JOPA</div>
             </th>
@@ -85,13 +110,13 @@
                     [ngClass]="{'changed': row.isChanged_sumClosing}">
             </td>
             <td class="small">{{dd.control[control(row)].text}}</td>
-            <td class="medium">
+            <td class="small">
                 <select [ngClass]="{'changed': row.isChanged_about}" (change)="onChange(row, 'about', $event.target)">
                     <option *ngFor="let d of dd.about" [value]="d.id" [selected]="d.id === row.about.id">{{d.text}}
                     </option>
                 </select>
             </td>
-            <td class="medium">
+            <td class="small">
                 <ng-container *ngIf="allow(); else notAllow">
                     <select [ngClass]="{'changed': row.isChanged_mark}" (change)="onChange(row, 'mark', $event.target)">
                         <option *ngFor="let d of dd.mark" [value]="d.id" [selected]="d.id === row.mark.id">{{d.text}}
@@ -106,21 +131,21 @@
                     </option>
                 </select>
             </td>
-            <td class="date-picker">
+            <td class="small">
                 <button (click)="toggle(row, true)" [ngClass]="{'changed': row.isChanged_copyDate}">
                     {{row.copyDate | date: 'dd MMM yyyy'}}
                 </button>
-                <div *ngIf="row.isActive_copyDate">
+                <!-- <div *ngIf="row.isActive_copyDate">
                     <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, true)" />
-                </div>
+                </div> -->
             </td>
-            <td class="date-picker">
+            <td class="small">
                 <button (click)="toggle(row, false)" [ngClass]="{'changed': row.isChanged_origDate}">
                     {{row.origDate | date: 'dd MMM yyyy'}}
                 </button>
-                <div *ngIf="row.isActive_origDate">
+                <!-- <div *ngIf="row.isActive_origDate">
                     <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, false)" />
-                </div>
+                </div> -->
             </td>
             <td class="medium">
                 <input type="text" (change)="onChange(row, 'title')" [(ngModel)]="row.title"

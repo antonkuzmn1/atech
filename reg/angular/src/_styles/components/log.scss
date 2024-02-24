@@ -1,0 +1,6 @@
+@import '../variables';
+@import '../toolkit/topbar.scss';
+
+section {
+    @include topbar;
+}

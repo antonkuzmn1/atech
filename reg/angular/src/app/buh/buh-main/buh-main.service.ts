@@ -1,12 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GlobalVariables } from "../../global-variables";
-import { SessionService } from "../../session.service";
-import { BuhDropdownList } from "../buh-dropdown-list";
+import { GlobalVariables } from "../../common/backend.config";
+import { SessionService } from "../../common/session.service";
 import { BuhService } from "../buh.service";
-import { BuhMainFilter } from "./buh-main-filter";
-import { BuhMainTable } from "./buh-main-table";
+import { BuhDropdownList } from "../classes/buh-dropdown-list";
+import { BuhMainFilter } from "./classes/buh-main-filter";
+import { BuhMainTable } from "./classes/buh-main-table";
 
 @Injectable({ providedIn: 'root' })
 export class BuhMainService {

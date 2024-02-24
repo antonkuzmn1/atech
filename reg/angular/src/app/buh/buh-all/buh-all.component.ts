@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './buh-all.component.html',
-  styleUrl: './buh-all.component.scss'
+  styleUrl: '../../../_styles/components/buh-all.scss'
 })
 export class BuhAllComponent {
 

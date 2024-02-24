@@ -7,8 +7,8 @@ import { RouterLink } from '@angular/router';
   imports: [
     RouterLink,
   ],
-  templateUrl: './log.component.html',
-  styleUrl: './log.component.scss'
+  templateUrl: 'log.component.html',
+  styleUrl: '../../_styles/components/log.scss'
 })
 export class LogComponent {
 

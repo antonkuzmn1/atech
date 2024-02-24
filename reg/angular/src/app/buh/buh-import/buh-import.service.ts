@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
-import { GlobalVariables } from "../../global-variables";
-import { SessionService } from "../../session.service";
-import { BuhImportResult } from "./buh-import-result";
-import { BuhImportRow } from "./buh-import-row";
+import { GlobalVariables } from "../../common/backend.config";
+import { SessionService } from "../../common/session.service";
+import { BuhImportResult } from "./classes/buh-import-result";
+import { BuhImportRow } from "./classes/buh-import-row";
 
 @Injectable({ providedIn: 'root' })
 export class BuhImportService implements OnInit {

@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskDirective } from 'ngx-mask';
-import { BuhDropdownList } from '../buh-dropdown-list';
-import { BuhEntityIdNameBool } from '../buh-entity-id-name-bool';
-import { BuhMainFilter } from './buh-main-filter';
-import { BuhMainTable } from './buh-main-table';
+import { BuhDropdownList } from '../classes/buh-dropdown-list';
+import { BuhEntityIdNameBool } from '../classes/buh-entity-id-name-bool';
 import { BuhMainService } from './buh-main.service';
+import { BuhMainFilter } from './classes/buh-main-filter';
+import { BuhMainTable } from './classes/buh-main-table';
 
 @Component({
   selector: 'app-buh-main',
@@ -26,7 +26,7 @@ import { BuhMainService } from './buh-main.service';
   //   provideNgxMask(),
   // ],
   templateUrl: './buh-main.component.html',
-  styleUrl: './buh-main.component.scss'
+  styleUrl: '../../../_styles/components/buh-main.scss'
 })
 export class BuhMainComponent implements OnInit {
   constructor(
@@ -37,20 +37,42 @@ export class BuhMainComponent implements OnInit {
   table: BuhMainTable[] = []
   editedRows: BuhMainTable[] = []
   dd: BuhDropdownList = new BuhDropdownList()
+
   contractors: BuhEntityIdNameBool[] = []
   initiators: BuhEntityIdNameBool[] = []
+  abouts: BuhEntityIdNameBool[] = []
+  marks: BuhEntityIdNameBool[] = []
+  statuses: BuhEntityIdNameBool[] = []
+
   isChanged: boolean = false
-  filterIsOpened: boolean[] = [false, false, false, false, false, false, false, false, false, false, false, false]
+  filterIsOpened: boolean[] = [false, false, false, false, false, true, false, false, false, false, false, false]
 
   ngOnInit(): void {
-    this.service.get().subscribe({
-      next: (data: BuhMainTable[]) => {
-        this.table = data
-      }
-    })
+    this.tableUpdate()
     this.service.getDropdowns().subscribe({
       next: (data: BuhDropdownList) => {
         this.dd = data
+        this.abouts = []
+        data.about.map((item) => {
+          if (this.contractorIsChecked(item.id))
+            this.abouts.push({ id: item.id, name: item.text, isChecked: true })
+          else
+            this.abouts.push({ id: item.id, name: item.text, isChecked: false })
+        })
+        this.marks = []
+        data.mark.map((item) => {
+          if (this.contractorIsChecked(item.id))
+            this.marks.push({ id: item.id, name: item.text, isChecked: true })
+          else
+            this.marks.push({ id: item.id, name: item.text, isChecked: false })
+        })
+        this.statuses = []
+        data.status.map((item) => {
+          if (this.contractorIsChecked(item.id))
+            this.statuses.push({ id: item.id, name: item.text, isChecked: true })
+          else
+            this.statuses.push({ id: item.id, name: item.text, isChecked: false })
+        })
       }
     })
     this.service.getContractors().subscribe({
@@ -71,12 +93,26 @@ export class BuhMainComponent implements OnInit {
     })
     this.service.getInitiators().subscribe({
       next: (data: { id: number, name: string }[]) => {
-        // this.initiators = data
+        this.initiators = []
+        data.map((item) => {
+          if (this.initiatorIsChecked(item.id))
+            this.initiators.push({ id: item.id, name: item.name, isChecked: true })
+          else
+            this.initiators.push({ id: item.id, name: item.name, isChecked: false })
+        })
         this.initiators.sort((a, b) => {
           if (a.name < b.name) return -1
           if (a.name > b.name) return 1
           return 0
         })
+      }
+    })
+  }
+
+  tableUpdate(): void {
+    this.service.get().subscribe({
+      next: (data: BuhMainTable[]) => {
+        this.table = data
       }
     })
   }
@@ -195,12 +231,96 @@ export class BuhMainComponent implements OnInit {
 
   contractorFilterConfirm() {
     this.filter.contractor = []
-    this.contractors.map((item) => {if (item.isChecked) this.filter.contractor.push(item.id)})
-    this.service.get().subscribe({next: (data: BuhMainTable[]) => this.table = data})
+    this.contractors.map((item) => { if (item.isChecked) this.filter.contractor.push(item.id) })
+    this.tableUpdate()
+  }
+
+  contractorFilterReset() {
+    this.filter.contractor = []
+    this.contractors.forEach(element => element.isChecked = false)
+    console.log(this.contractors);
+
   }
 
   contractorIsChecked(id: number) {
     return this.filter.contractor.includes(id)
   }
 
+  initiatorFilterConfirm() {
+    this.filter.initiator = []
+    this.initiators.map((item) => { if (item.isChecked) this.filter.initiator.push(item.id) })
+    this.tableUpdate()
+  }
+
+  initiatorFilterReset() {
+    this.filter.initiator = []
+    this.initiators.forEach(element => element.isChecked = false)
+    console.log(this.initiators);
+
+  }
+
+  initiatorIsChecked(id: number) {
+    return this.filter.initiator.includes(id)
+  }
+
+  ddFilterManager = {
+    confirm: (name: string): void => {
+      switch (name) {
+        case "about":
+          this.filter.about = []
+          this.abouts.map((item) => {
+            if (item.isChecked)
+              this.filter.about.push(item.id)
+          })
+          break
+        case "mark":
+          this.filter.about = []
+          this.abouts.map((item) => {
+            if (item.isChecked)
+              this.filter.about.push(item.id)
+          })
+      }
+      this.tableUpdate()
+    },
+    reset: (name: string): void => {
+      switch (name) {
+        case "about":
+          this.filter.about = []
+          this.abouts.forEach(element => element.isChecked = false)
+          break
+        case "mark":
+          this.filter.mark = []
+          this.marks.forEach(element => element.isChecked = false)
+          break
+        case "status":
+          this.filter.status = []
+          this.statuses.forEach(element => element.isChecked = false)
+          break
+        default: throw new Error('o kurwa!')
+      }
+    },
+    check: (name: string, id: number): boolean => {
+      switch (name) {
+        case "about": return this.filter.about.includes(id)
+        case "mark": return this.filter.mark.includes(id)
+        case "status": return this.filter.mark.includes(id)
+        default: throw new Error('o kurwa!')
+      }
+    }
+  }
+
+  ddFilterConfirm() {
+    this.filter.initiator = []
+    this.initiators.map((item) => { if (item.isChecked) this.filter.initiator.push(item.id) })
+    this.tableUpdate()
+  }
+
+  ddFilterReset() {
+    this.filter.initiator = []
+    this.initiators.forEach(element => element.isChecked = false)
+  }
+
+  ddIsChecked(id: number): boolean {
+    return this.filter.initiator.includes(id)
+  }
 }

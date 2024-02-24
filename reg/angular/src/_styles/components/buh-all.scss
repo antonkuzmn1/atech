@@ -1,0 +1,6 @@
+@import '../variables';
+@import '../toolkit/table.scss';
+
+section {
+    @include table;
+}

@@ -1,4 +1,4 @@
-import { BuhDropdown } from './buh-dropdown';
+import { BuhDropdown } from './classes/buh-dropdown';
 
 describe('BuhDropdown', () => {
   it('should create an instance', () => {

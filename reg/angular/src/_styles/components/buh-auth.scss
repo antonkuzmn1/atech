@@ -1,0 +1,31 @@
+@import '../variables';
+@import '../toolkit/scrollbar.scss';
+@import '../toolkit/button.scss';
+@import '../toolkit/input.scss';
+
+section {
+    @include scrollbar;
+    width: 100%;
+    height: calc(100vh - $height_medium);
+    display: flex;
+
+    & div {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: $width_medium;
+        box-shadow: $shadowDefault;
+
+        & button {
+            @include buttonBrand;
+            height: 35px;
+        }
+
+        & input {
+            @include inputDefault;
+            height: 35px;
+            width: 100%;
+        }
+    }
+}

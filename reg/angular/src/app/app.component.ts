@@ -9,8 +9,8 @@ import { RouterOutlet } from '@angular/router';
     CommonModule,
     RouterOutlet,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  template: '<router-outlet></router-outlet>',
+  styleUrl: './../_styles/components/app.scss',
 })
 export class AppComponent {
   title = 'angular';

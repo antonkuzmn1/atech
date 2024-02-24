@@ -1,0 +1,84 @@
+@import "../variables";
+
+@mixin input {
+    // width: 100%;
+    // height: 100%;
+    border: none;
+    outline: none;
+    padding: 0px;
+    text-align: center;
+}
+
+@mixin inputDefault {
+    & label {
+        width: calc(100% - 20px);
+    }
+    &[type="text"],
+    &[type="password"] {
+        @include input;
+        background-color: $colorDefault;
+        color: $colorDefault_forFont;
+
+        &:hover {
+            background-color: $colorDefault_hover;
+        }
+        &:focus {
+            background-color: $colorDefault_focus;
+        }
+        &::placeholder {
+            color: $colorDefault_forFont_placeholder;
+        }
+        &.changed {
+            background-color: $colorDefault_changed;
+        }
+    }
+    &[type="number"] {
+        @include input;
+        background-color: $colorDefault;
+        color: $colorDefault_forFont;
+
+        &:hover {
+            background-color: $colorDefault_hover;
+        }
+        &:focus {
+            background-color: $colorDefault_focus;
+        }
+        &::placeholder {
+            color: $colorDefault_forFont_placeholder;
+        }
+        &.changed {
+            background-color: $colorDefault_changed;
+        }
+    }
+    &[type="checkbox"] {
+        @include input;
+        background-color: $colorDefault;
+        color: $colorDefault_forFont;
+        width: 20px;
+
+        &:hover {
+            background-color: $colorDefault_hover;
+        }
+        &:focus {
+            background-color: $colorDefault_focus;
+        }
+    }
+    &[type="date"] {
+        @include input;
+        background-color: $colorDefault;
+        color: $colorDefault_forFont;
+
+        &:hover {
+            background-color: $colorDefault_hover;
+        }
+        &:focus {
+            background-color: $colorDefault_focus;
+        }
+        &::placeholder {
+            color: $colorDefault_forFont_placeholder;
+        }
+        &.changed {
+            background-color: $colorDefault_changed;
+        }
+    }
+}

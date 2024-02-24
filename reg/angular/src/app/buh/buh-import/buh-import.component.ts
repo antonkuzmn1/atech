@@ -2,10 +2,10 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { BuhImportParserParams } from './buh-import-parser-params';
-import { BuhImportResult } from './buh-import-result';
-import { BuhImportRow } from './buh-import-row';
 import { BuhImportService } from './buh-import.service';
+import { BuhImportParserParams } from './classes/buh-import-parser-params';
+import { BuhImportResult } from './classes/buh-import-result';
+import { BuhImportRow } from './classes/buh-import-row';
 
 @Component({
   selector: 'app-buh-import',
@@ -16,7 +16,7 @@ import { BuhImportService } from './buh-import.service';
     FormsModule,
   ],
   templateUrl: './buh-import.component.html',
-  styleUrl: './buh-import.component.scss'
+  styleUrl: '../../../_styles/components/buh-import.scss'
 })
 export class BuhImportComponent implements OnInit {
   constructor(

@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InputDirective } from '../../input.directive';
-import { SessionService } from '../../session.service';
+import { InputDirective } from '../../common/input.directive';
+import { SessionService } from '../../common/session.service';
 
 @Component({
   selector: 'app-buh-auth',
@@ -13,7 +13,7 @@ import { SessionService } from '../../session.service';
     NgIf,
   ],
   templateUrl: './buh-auth.component.html',
-  styleUrl: './buh-auth.component.scss'
+  styleUrl: '../../../_styles/components/buh-auth.scss'
 })
 export class BuhAuthComponent implements OnInit {
 

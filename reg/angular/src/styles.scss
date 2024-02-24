@@ -1,13 +1,10 @@
-@import "app/global.scss";
+@import '_styles/variables';
 
 body,
 html {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    // @include gradientAnimation($gray, rgb(30, 30, 30), $gray, rgb(15, 15, 15));
     height: 100vh;
-    background-color: $gray;
+    background-color: $colorBrand_darker;
 }
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';

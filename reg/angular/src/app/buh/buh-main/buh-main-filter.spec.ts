@@ -1,4 +1,4 @@
-import { BuhMainFilter } from './buh-main-filter';
+import { BuhMainFilter } from './classes/buh-main-filter';
 
 describe('BuhMainFilter', () => {
   it('should create an instance', () => {

@@ -1,0 +1,23 @@
+@import "../variables";
+
+@mixin select {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0px;
+    text-align: center;
+}
+
+@mixin selectDefault {
+    @include select;
+    background-color: $colorDefault;
+
+    &:hover {
+        background-color: $colorDefault_hover;
+    }
+    &.changed {
+        background-color: $colorDefault_changed;
+    }
+}

@@ -1,6 +1,10 @@
 <section>
     <a *ngIf="allow(); then main else auth">Реестр учета закрывающих документов</a>
-    <ng-template #main><a routerLink="/buh/main">Реестр учета закрывающих документов</a></ng-template>
-    <ng-template #auth><a routerLink="/buh/auth">Реестр учета закрывающих документов</a></ng-template>
+    <ng-template #main>
+        <a routerLink="/buh/main">Реестр учета закрывающих документов</a>
+    </ng-template>
+    <ng-template #auth>
+        <a routerLink="/buh/auth">Реестр учета закрывающих документов</a>
+    </ng-template>
     <a routerLink="/log">Отдел логистики</a>
 </section>
