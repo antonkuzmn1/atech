@@ -1,156 +1,230 @@
 <section>
-    <table class="header">
-        <tr *ngIf="isChanged">
-            <th class="medium"><button (click)="submit()">Применить</button></th>
-            <th class="large"></th>
-            <th class="medium"></th>
-            <th class="small"></th>
-            <th class="small"></th>
-            <th class="small"></th>
-            <th class="medium"></th>
-            <th class="medium"></th>
-            <th class="small"></th>
-            <th class="small"></th>
-            <th class="small"></th>
-            <th class="medium"></th>
-        </tr>
-        <tr>
-            <th class="medium">
-                <button (click)="filterToggle(0)">Контрагент</button>
-                <div class="filter" *ngIf="filterIsOpened[0]">
-                    <div class="list" *ngFor="let c of contractors">
-                        <input [(ngModel)]="c.isChecked" id="{{c.id}}" type="checkbox">
-                        <label for="{{c.id}}">{{c.name}}</label>
-                    </div>
-                    <div class="tools">
-                        <button (click)="contractorFilterConfirm()">Применить</button>
-                        <button (click)="contractorFilterReset()">Сбросить</button>
-                    </div>
-                </div>
-            </th>
-            <th class="large">
-                <button (click)="filterToggle(1)">Назначение</button>
-                <div class="filter" *ngIf="filterIsOpened[1]">
-                    <input [(ngModel)]="filter.destination" type="text" placeholder="поиск">
-                    <div class="tools">
-                        <button (click)="tableUpdate()">Применить</button>
-                    </div>
-                </div>
-            </th>
-            <th class="medium">
-                <button (click)="filterToggle(2)">Инициатор</button>
-                <div class="filter" *ngIf="filterIsOpened[2]">
-                    <div class="list" *ngFor="let i of initiators">
-                        <input [(ngModel)]="i.isChecked" id="{{i.id}}" type="checkbox">
-                        <label for="{{i.id}}">{{i.name}}</label>
-                    </div>
-                    <div class="tools">
-                        <button (click)="initiatorFilterConfirm()">Применить</button>
-                        <button (click)="initiatorFilterReset()">Сбросить</button>
-                    </div>
-                </div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(3)">Сумма</button>
-                <div class="filter" *ngIf="filterIsOpened[3]">
-                    <input [(ngModel)]="filter.sum.from" type="number" placeholder="поиск">
-                    <input [(ngModel)]="filter.sum.to" type="number" placeholder="поиск">
-                    <div class="tools">
-                        <button (click)="tableUpdate()">Применить</button>
-                    </div>
-                </div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(4)">Закр.сумма</button>
-                <div class="filter" *ngIf="filterIsOpened[4]">
-                    <input [(ngModel)]="filter.sumClosing.from" type="number" placeholder="поиск">
-                    <input [(ngModel)]="filter.sumClosing.to" type="number" placeholder="поиск">
-                    <div class="tools">
-                        <button (click)="tableUpdate()">Применить</button>
-                    </div>
-                </div>
-            </th>
-            <th class="small">
-                Контроль
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(6)">Информация</button>
-                <div *ngIf="filterIsOpened[6]">JOPA</div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(7)">Отметка</button>
-                <div *ngIf="filterIsOpened[7]">JOPA</div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(8)">Статус</button>
-                <div *ngIf="filterIsOpened[8]">JOPA</div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(9)">Дата копии</button>
-                <div *ngIf="filterIsOpened[9]">JOPA</div>
-            </th>
-            <th class="small">
-                <button (click)="filterToggle(10)">Дата ориг-ла</button>
-                <div *ngIf="filterIsOpened[10]">JOPA</div>
-            </th>
-            <th class="medium">
-                <button (click)="filterToggle(11)">Комментарий</button>
-                <div *ngIf="filterIsOpened[11]">JOPA</div>
-            </th>
-        </tr>
-    </table>
-    <table class="content">
-        <tr *ngFor="let row of table">
-            <td class="medium">{{row.contractor.name}}</td>
-            <td class="large">{{row.destination}}</td>
-            <td class="medium">{{row.initiator ? row.initiator.name : ""}}</td>
-            <td class="small">{{row.sum}}</td>
-            <td class="small">
-                <input type="number" (change)="onChange(row, 'sumClosing')" [(ngModel)]="row.sumClosing"
-                    [ngClass]="{'changed': row.isChanged_sumClosing}">
-            </td>
-            <td class="small">{{dd.control[control(row)].text}}</td>
-            <td class="small">
-                <select [ngClass]="{'changed': row.isChanged_about}" (change)="onChange(row, 'about', $event.target)">
-                    <option *ngFor="let d of dd.about" [value]="d.id" [selected]="d.id === row.about.id">{{d.text}}
-                    </option>
-                </select>
-            </td>
-            <td class="small">
-                <ng-container *ngIf="allow(); else notAllow">
-                    <select [ngClass]="{'changed': row.isChanged_mark}" (change)="onChange(row, 'mark', $event.target)">
-                        <option *ngFor="let d of dd.mark" [value]="d.id" [selected]="d.id === row.mark.id">{{d.text}}
-                        </option>
-                    </select>
-                </ng-container>
-                <ng-template #notAllow>{{row.mark.text}}</ng-template>
-            </td>
-            <td class="small">
-                <select [ngClass]="{'changed': row.isChanged_status}" (change)="onChange(row, 'status', $event.target)">
-                    <option *ngFor="let d of dd.status" [value]="d.id" [selected]="d.id === row.status.id">{{d.text}}
-                    </option>
-                </select>
-            </td>
-            <td class="small">
-                <button (click)="toggle(row, true)" [ngClass]="{'changed': row.isChanged_copyDate}">
-                    {{row.copyDate | date: 'dd MMM yyyy'}}
-                </button>
-                <!-- <div *ngIf="row.isActive_copyDate">
-                    <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, true)" />
-                </div> -->
-            </td>
-            <td class="small">
-                <button (click)="toggle(row, false)" [ngClass]="{'changed': row.isChanged_origDate}">
-                    {{row.origDate | date: 'dd MMM yyyy'}}
-                </button>
-                <!-- <div *ngIf="row.isActive_origDate">
-                    <ngb-datepicker [(ngModel)]="row.ngb_date" (ngModelChange)="handleDateChange(row, $event, false)" />
-                </div> -->
-            </td>
-            <td class="medium">
-                <input type="text" (change)="onChange(row, 'title')" [(ngModel)]="row.title"
-                    [ngClass]="{'changed': row.isChanged_title}">
-            </td>
-        </tr>
-    </table>
+  <table class="header">
+    <tr *ngIf="isChanged">
+      <th class="medium"><button (click)="submit()">Применить</button></th>
+      <th class="large"></th>
+      <th class="medium"></th>
+      <th class="small"></th>
+      <th class="small"></th>
+      <th class="small"></th>
+      <th class="medium"></th>
+      <th class="medium"></th>
+      <th class="small"></th>
+      <th class="small"></th>
+      <th class="small"></th>
+      <th class="medium"></th>
+    </tr>
+    <tr>
+      <th class="medium">
+        <button (click)="filterToggle(0)">Контрагент</button>
+        <div class="dropdown" *ngIf="filterIsOpened[0]">
+          <div class="list">
+            <div
+              class="listrows"
+              *ngFor="let c of contractors"
+              (click)="toggleCheckbox(c)"
+            >
+              <input
+                [(ngModel)]="c.isChecked"
+                id="{{ c.id }}"
+                type="checkbox"
+              />
+              <label>{{ c.name }}</label>
+            </div>
+          </div>
+          <div class="tools">
+            <button (click)="contractorFilterConfirm()">Применить</button>
+            <button (click)="contractorFilterReset()">Сбросить</button>
+          </div>
+        </div>
+      </th>
+      <th class="large">
+        <button (click)="filterToggle(1)">Назначение</button>
+        <div class="dropdown" style="height: auto" *ngIf="filterIsOpened[1]">
+          <input
+            [(ngModel)]="filter.destination"
+            type="text"
+            placeholder="поиск"
+          />
+          <div class="tools">
+            <button (click)="tableUpdate()">Применить</button>
+          </div>
+        </div>
+      </th>
+      <th class="medium">
+        <button (click)="filterToggle(2)">Инициатор</button>
+        <div class="dropdown" *ngIf="filterIsOpened[2]">
+          <div class="list">
+            <div
+              class="listrows"
+              *ngFor="let i of initiators"
+              (click)="toggleCheckbox(i)"
+            >
+              <input
+                [(ngModel)]="i.isChecked"
+                id="{{ i.id }}"
+                type="checkbox"
+              />
+              <label>{{ i.name }}</label>
+            </div>
+          </div>
+          <div class="tools">
+            <button (click)="initiatorFilterConfirm()">Применить</button>
+            <button (click)="initiatorFilterReset()">Сбросить</button>
+          </div>
+        </div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(3)">Сумма</button>
+        <div class="dropdown" style="height: auto;" *ngIf="filterIsOpened[3]">
+          <input
+            [(ngModel)]="filter.sum.from"
+            type="number"
+            placeholder="поиск"
+          />
+          <input
+            [(ngModel)]="filter.sum.to"
+            type="number"
+            placeholder="поиск"
+          />
+          <div class="tools">
+            <button (click)="tableUpdate()">Применить</button>
+          </div>
+        </div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(4)">Закр.сумма</button>
+        <div class="dropdown" style="height: auto;" *ngIf="filterIsOpened[4]">
+          <input
+            [(ngModel)]="filter.sumClosing.from"
+            type="number"
+            placeholder="поиск"
+          />
+          <input
+            [(ngModel)]="filter.sumClosing.to"
+            type="number"
+            placeholder="поиск"
+          />
+          <div class="tools">
+            <button (click)="tableUpdate()">Применить</button>
+          </div>
+        </div>
+      </th>
+      <th class="small">Контроль</th>
+      <th class="small">
+        <button (click)="filterToggle(6)">Информация</button>
+        <div *ngIf="filterIsOpened[6]">JOPA</div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(7)">Отметка</button>
+        <div *ngIf="filterIsOpened[7]">JOPA</div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(8)">Статус</button>
+        <div *ngIf="filterIsOpened[8]">JOPA</div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(9)">Дата копии</button>
+        <div *ngIf="filterIsOpened[9]">JOPA</div>
+      </th>
+      <th class="small">
+        <button (click)="filterToggle(10)">Дата ориг-ла</button>
+        <div *ngIf="filterIsOpened[10]">JOPA</div>
+      </th>
+      <th class="medium">
+        <button (click)="filterToggle(11)">Комментарий</button>
+        <div *ngIf="filterIsOpened[11]">JOPA</div>
+      </th>
+    </tr>
+  </table>
+  <table class="content">
+    <tr *ngFor="let row of table">
+      <td class="medium">{{ row.contractor.name }}</td>
+      <td class="large">{{ row.destination }}</td>
+      <td class="medium">{{ row.initiator ? row.initiator.name : "" }}</td>
+      <td class="small">{{ row.sum }}</td>
+      <td class="small">
+        <input
+          type="number"
+          (change)="onChange(row, 'sumClosing')"
+          [(ngModel)]="row.sumClosing"
+          [ngClass]="{ changed: row.isChanged_sumClosing }"
+          min="0"
+          step="1000"
+        />
+      </td>
+      <td class="small">{{ dd.control[control(row)].text }}</td>
+      <td class="small">
+        <select
+          [ngClass]="{ changed: row.isChanged_about }"
+          (change)="onChange(row, 'about', $event.target)"
+        >
+          <option
+            *ngFor="let d of dd.about"
+            [value]="d.id"
+            [selected]="d.id === row.about.id"
+          >
+            {{ d.text }}
+          </option>
+        </select>
+      </td>
+      <td class="small">
+        <ng-container *ngIf="allow(); else notAllow">
+          <select
+            [ngClass]="{ changed: row.isChanged_mark }"
+            (change)="onChange(row, 'mark', $event.target)"
+          >
+            <option
+              *ngFor="let d of dd.mark"
+              [value]="d.id"
+              [selected]="d.id === row.mark.id"
+            >
+              {{ d.text }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-template #notAllow>{{ row.mark.text }}</ng-template>
+      </td>
+      <td class="small">
+        <select
+          [ngClass]="{ changed: row.isChanged_status }"
+          (change)="onChange(row, 'status', $event.target)"
+        >
+          <option
+            *ngFor="let d of dd.status"
+            [value]="d.id"
+            [selected]="d.id === row.status.id"
+          >
+            {{ d.text }}
+          </option>
+        </select>
+      </td>
+      <td class="small">
+        <input
+          type="date"
+          (change)="onChange(row, 'copyDate')"
+          [(ngModel)]="row.copyDate_string"
+          [ngClass]="{ changed: row.isChanged_copyDate }"
+          [attr.readonly]="!allow() ? true : null"
+        />
+      </td>
+      <td class="small">
+        <input
+          type="date"
+          (change)="onChange(row, 'origDate')"
+          [(ngModel)]="row.origDate_string"
+          [ngClass]="{ changed: row.isChanged_origDate }"
+          [attr.readonly]="!allow() ? true : null"
+        />
+      </td>
+      <td class="medium">
+        <input
+          type="text"
+          (change)="onChange(row, 'title')"
+          [(ngModel)]="row.title"
+          [ngClass]="{ changed: row.isChanged_title }"
+        />
+      </td>
+    </tr>
+  </table>
 </section>

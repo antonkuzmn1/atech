@@ -10,7 +10,7 @@ import { RouterOutlet } from '@angular/router';
     RouterOutlet,
   ],
   template: '<router-outlet></router-outlet>',
-  styleUrl: './../_styles/components/app.scss',
+  styleUrl: './../styles/components/app.scss',
 })
 export class AppComponent {
   title = 'angular';

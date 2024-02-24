@@ -12,7 +12,7 @@ import { SessionService } from '../common/session.service';
     NgIf,
   ],
   templateUrl: 'home.component.html',
-  styleUrl: '../../_styles/components/home.scss'
+  styleUrl: '../../styles/components/home.scss'
 })
 export class HomeComponent implements OnInit {
   constructor(

@@ -51,17 +51,18 @@
         }
     }
     &[type="checkbox"] {
-        @include input;
-        background-color: $colorDefault;
-        color: $colorDefault_forFont;
+        // @include input;
+        // background-color: $colorDefault;
+        // color: $colorDefault_forFont;
         width: 20px;
+        height: 20px;
 
-        &:hover {
-            background-color: $colorDefault_hover;
-        }
-        &:focus {
-            background-color: $colorDefault_focus;
-        }
+        // &:hover {
+        //     background-color: $colorDefault_hover;
+        // }
+        // &:focus {
+        //     background-color: $colorDefault_focus;
+        // }
     }
     &[type="date"] {
         @include input;

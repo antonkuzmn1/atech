@@ -13,7 +13,7 @@ import { SessionService } from '../../common/session.service';
     NgIf,
   ],
   templateUrl: './buh-auth.component.html',
-  styleUrl: '../../../_styles/components/buh-auth.scss'
+  styleUrl: '../../../styles/components/buh-auth.scss'
 })
 export class BuhAuthComponent implements OnInit {
 

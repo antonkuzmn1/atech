@@ -16,7 +16,7 @@ import { BuhImportRow } from './classes/buh-import-row';
     FormsModule,
   ],
   templateUrl: './buh-import.component.html',
-  styleUrl: '../../../_styles/components/buh-import.scss'
+  styleUrl: '../../../styles/components/buh-import.scss'
 })
 export class BuhImportComponent implements OnInit {
   constructor(
