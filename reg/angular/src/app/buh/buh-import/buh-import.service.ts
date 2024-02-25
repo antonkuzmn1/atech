@@ -1,33 +1,19 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
-import { GlobalVariables } from "../../common/backend.config";
-import { SessionService } from "../../common/session.service";
-import { BuhImportResult } from "./classes/buh-import-result";
-import { BuhImportRow } from "./classes/buh-import-row";
+import { HttpClient } from '@angular/common/http';
+import { Injectable, } from '@angular/core';
+import { Observable } from 'rxjs';
+import { BackendConfig } from '../../common/backend.config';
+import { BuhImportResult } from './classes/buh-import-result';
+import { BuhImportRow } from './classes/buh-import-row';
 
 @Injectable({ providedIn: 'root' })
-export class BuhImportService implements OnInit {
-    constructor(
-        private http: HttpClient,
-        private session: SessionService,
-        private globalVariables: GlobalVariables,
-    ) { }
-    private url: string = this.globalVariables.auto() + "buh/upload";
-    private cred = { withCredentials: true };
+export class BuhImportService {
+  constructor(private http: HttpClient, private be: BackendConfig) {}
 
-    ngOnInit(): void {
-        this.session.get();
-    }
-
-    private allow(): boolean {
-        return this.session.groups.some(id =>
-            id === 1 ||
-            id === 2);
-    }
-
-    upload(jsonData: BuhImportRow[]): Observable<BuhImportResult> {
-        if (!this.allow()) throw new Error("o kurwa! >:(");
-        return this.http.post<BuhImportResult>(this.url, JSON.stringify(jsonData), this.cred);
-    }
+  upload(jsonData: BuhImportRow[]): Observable<BuhImportResult> {
+    return this.http.post<BuhImportResult>(
+      this.be.auto('buh/upload'),
+      JSON.stringify(jsonData),
+      this.be.cookie
+    );
+  }
 }

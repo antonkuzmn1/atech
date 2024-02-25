@@ -15,13 +15,10 @@ export const routes: Routes = [
     children: [
       { path: 'auth', component: BuhAuthComponent },
       { path: 'main/:year/:month', component: BuhMainComponent },
-      {
-        path: 'main',
-        redirectTo: 'main/0/0',
-        pathMatch: 'full',
-      },
-      { path: 'all', component: BuhAllComponent },
+      { path: 'all/:year/:month', component: BuhAllComponent },
       { path: 'import', component: BuhImportComponent },
+      { path: 'all', redirectTo: 'all/0/0', pathMatch: 'full' },
+      { path: 'main', redirectTo: 'main/0/0', pathMatch: 'full' },
     ],
   },
   { path: 'log', component: LogComponent },

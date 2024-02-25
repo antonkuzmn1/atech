@@ -15,6 +15,20 @@
       <th class="medium">Комментарий</th>
     </tr>
     <tr>
+      <th class="small">Действие</th>
+      <th class="medium">Инициатор</th>
+      <th class="medium">Контрагент</th>
+      <th class="large">Наименование</th>
+      <th class="small">Номер</th>
+      <th class="small">Дата</th>
+      <th class="small">Сумма</th>
+      <th class="medium">Отметка</th>
+      <th class="small">Статус</th>
+      <th class="small">Дата копии</th>
+      <th class="small">Дата ориг-ла</th>
+      <th class="medium">Комментарий</th>
+    </tr>
+    <tr>
       <th class="small"><button>Добавить</button></th>
       <th class="medium"><input type="text" /></th>
       <th class="medium"><input type="text" /></th>
@@ -45,7 +59,7 @@
             <td class="medium">{{row.title}}</td>
         </tr> -->
   <!-- </table> -->
-  <ng-container *ngIf="table.length !== 0; else loading">
+  <!-- <ng-container *ngIf="table.length !== 0; else loading">
     <table class="content">
       <tr
         *ngFor="let row of table"
@@ -143,5 +157,5 @@
   </ng-container>
   <ng-template #loading>
     <div class="loading"><img [src]="loadingPage" /></div>
-  </ng-template>
+  </ng-template> -->
 </section>

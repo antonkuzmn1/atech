@@ -6,24 +6,18 @@ import { SessionService } from '../common/session.service';
 @Component({
   selector: 'app-buh',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    NgIf,
-  ],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './buh.component.html',
-  styleUrl: '../../styles/components/buh.scss'
+  styleUrl: '../../styles/components/buh.scss',
 })
 export class BuhComponent implements OnInit {
-  constructor(
-    private session: SessionService,
-  ) { }
+  constructor(private session: SessionService) {}
 
   ngOnInit(): void {
     this.session.get();
   }
 
-  allow(): boolean { return this.session.allow([2]) }
-
+  allow(): boolean {
+    return this.session.allow([2]);
+  }
 }

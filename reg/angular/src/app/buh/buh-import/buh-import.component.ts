@@ -1,7 +1,8 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { Dictionaries } from '../../common/dictionaries';
 import { BuhImportService } from './buh-import.service';
 import { BuhImportParserParams } from './classes/buh-import-parser-params';
 import { BuhImportResult } from './classes/buh-import-result';
@@ -15,10 +16,10 @@ import { BuhImportRow } from './classes/buh-import-row';
     NgFor,
     FormsModule,
   ],
-  templateUrl: './buh-import.component.html',
+  templateUrl: 'buh-import.component.html',
   styleUrl: '../../../styles/components/buh-import.scss'
 })
-export class BuhImportComponent implements OnInit {
+export class BuhImportComponent {
   constructor(
     private service: BuhImportService,
   ) { }
@@ -27,9 +28,6 @@ export class BuhImportComponent implements OnInit {
   firstAndLastRows: { index: number, row: any }[] = [];
   pp = new BuhImportParserParams();
   insertedRows: number = 0;
-
-  ngOnInit(): void {
-  }
 
   onFileChange(event: any) {
     this.file = event.target.files[0];
@@ -45,7 +43,6 @@ export class BuhImportComponent implements OnInit {
           const workbook = XLSX.read(data, { type: 'array' });
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
-          // console.log(sheet);
           this.jsonData = [];
           for (let i = parseInt(this.pp.start); i !== parseInt(this.pp.stop) + 1; i++) {
             const getValueOfCell = function (letter: string): string | number {
@@ -107,10 +104,9 @@ export class BuhImportComponent implements OnInit {
     reader.readAsArrayBuffer(this.file);
   }
 
-  months: string[] = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
   dateToString(date: Date) {
     const day = date.getDate();
-    const month = this.months[date.getMonth()];
+    const month = Dictionaries.date.month.full.lower.russian.genetive[date.getMonth()];
     const year = date.getFullYear();
     return `${day} ${month} ${year} г.`;
   }

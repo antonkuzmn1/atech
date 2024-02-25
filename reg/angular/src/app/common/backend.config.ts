@@ -1,13 +1,12 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class GlobalVariables {
+export class BackendConfig {
+  public auto(path: string = ''): string {
+    if (window.location.origin === 'http://localhost:4200')
+      return 'http://localhost:8080/api/' + path;
+    else return window.location.origin + '/api/' + path;
+  }
 
-    public auto(): string {
-        if (window.location.origin === "http://localhost:4200") return "http://localhost:8080/api/";
-        else return (window.location.origin + "/api/");
-    }
-
-    public cookie: { withCredentials: boolean } = { withCredentials: true };
-
+  public cookie: { withCredentials: boolean } = { withCredentials: true };
 }

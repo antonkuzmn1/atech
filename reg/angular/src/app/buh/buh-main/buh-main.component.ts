@@ -3,7 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Dictionaries } from '../../common/dictionaries';
+import { SessionService } from '../../common/session.service';
 import { Variables } from '../../common/variables';
+import { BuhService } from '../buh.service';
 import { BuhDropdownList } from '../classes/buh-dropdown-list';
 import { BuhEntityIdNameBool } from '../classes/buh-entity-id-name-bool';
 import { BuhMainService } from './buh-main.service';
@@ -31,18 +34,20 @@ export class BuhMainComponent implements OnInit {
     public filter: BuhMainFilter,
     private route: ActivatedRoute,
     private vars: Variables,
-    private router: Router
+    private router: Router,
+    private session: SessionService,
+    private buhService: BuhService
   ) {}
 
   year: number = 0;
   month: number = 0;
 
-  assetLoading: string = 'assets/loading.gif';
-  assetNotFound: string = 'assets/notfound.jpg';
+  assetLoading: string = Dictionaries.path.status.loading.img;
+  assetNotFound: string = Dictionaries.path.status.notFound.img;
   loadingPage: string = this.assetLoading;
 
-  textLoading: string = 'Загрузка...';
-  textNotFound: string = 'Ничего не найдено :(';
+  textLoading: string = Dictionaries.path.status.loading.text;
+  textNotFound: string = Dictionaries.path.status.notFound.text;
   loadingPlate: string = this.textLoading;
 
   table: BuhMainTable[] = [];
@@ -55,7 +60,6 @@ export class BuhMainComponent implements OnInit {
   marks: BuhEntityIdNameBool[] = [];
   statuses: BuhEntityIdNameBool[] = [];
 
-  selectedRow: BuhMainTable | null = null;
   isChanged: boolean = false;
   filterIsOpened: boolean[] = [
     false,
@@ -71,91 +75,6 @@ export class BuhMainComponent implements OnInit {
     false,
     false,
   ];
-  filterInputDateString: string = '';
-  filterCopyDateFrom: string = '';
-  filterCopyDateTo: string = '';
-  filterOrigDateFrom: string = '';
-  filterOrigDateTo: string = '';
-  syncFilterDate(name: string = 'all', reset: boolean = false): void {
-    switch (name) {
-      case 'all':
-        this.filterCopyDateFrom = this.filter.copyDate.from
-          .toString()
-          .split('T')[0];
-        this.filterCopyDateTo = this.filter.copyDate.to
-          .toString()
-          .split('T')[0];
-        this.filterOrigDateFrom = this.filter.origDate.from
-          .toString()
-          .split('T')[0];
-        this.filterOrigDateTo = this.filter.origDate.to
-          .toString()
-          .split('T')[0];
-        break;
-      case 'copyDateFrom':
-        if (this.filterCopyDateFrom === '')
-          this.filterCopyDateFrom = this.filter.copyDate.from
-            .toString()
-            .split('T')[0];
-        else this.filter.copyDate.from = new Date(this.filterCopyDateFrom);
-        break;
-      case 'copyDateTo':
-        if (this.filterCopyDateTo === '')
-          this.filterCopyDateTo = this.filter.copyDate.to
-            .toString()
-            .split('T')[0];
-        else this.filter.copyDate.to = new Date(this.filterCopyDateTo);
-        break;
-      case 'origDateFrom':
-        if (this.filterOrigDateFrom === '')
-          this.filterOrigDateFrom = this.filter.origDate.from
-            .toString()
-            .split('T')[0];
-        else this.filter.origDate.from = new Date(this.filterOrigDateFrom);
-        break;
-      case 'origDateTo':
-        if (this.filterOrigDateTo === '')
-          this.filterOrigDateTo = this.filter.origDate.to
-            .toString()
-            .split('T')[0];
-        else this.filter.origDate.to = new Date(this.filterOrigDateTo);
-        break;
-    }
-  }
-  setFilterDateToDefault(name: string) {
-    switch (name) {
-      case 'copyDate':
-        this.filterCopyDateFrom = '';
-        this.filterCopyDateTo = '';
-        this.filter.copyDate.from = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth() - 1,
-          1
-        );
-        this.filter.copyDate.to = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          0
-        );
-        this.filter.copyDate.null = true;
-        break;
-      case 'origDate':
-        this.filterOrigDateFrom = '';
-        this.filterOrigDateTo = '';
-        this.filter.origDate.from = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth() - 1,
-          1
-        );
-        this.filter.origDate.to = new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          0
-        );
-        this.filter.origDate.null = true;
-        break;
-    }
-  }
 
   ngOnInit(): void {
     this.dateViaUrl().then(() => this.tableUpdate());
@@ -165,8 +84,9 @@ export class BuhMainComponent implements OnInit {
     this.syncFilterDate();
   }
   allow(): boolean {
-    return this.service.allow();
+    return this.session.allow([2]);
   }
+  filterInputDateString: string = '';
   filterInputDate(): void {
     const year = +this.filterInputDateString.split('-')[0];
     const month = +this.filterInputDateString.split('-')[1];
@@ -200,7 +120,7 @@ export class BuhMainComponent implements OnInit {
     });
   }
   getContractors(): void {
-    this.service.getContractors().subscribe({
+    this.buhService.getContractors().subscribe({
       next: (data: { id: number; name: string }[]) => {
         this.contractors = [];
         data.map((item): void => {
@@ -226,7 +146,7 @@ export class BuhMainComponent implements OnInit {
     });
   }
   getInitiators(): void {
-    this.service.getInitiators().subscribe({
+    this.buhService.getInitiators().subscribe({
       next: (data: { id: number; name: string }[]) => {
         this.initiators = [];
         data.map((item): void => {
@@ -252,7 +172,7 @@ export class BuhMainComponent implements OnInit {
     });
   }
   getDropdowns(): void {
-    this.service.getDropdowns().subscribe({
+    this.buhService.getDropdowns().subscribe({
       next: (data: BuhDropdownList) => {
         this.dd = data;
         this.abouts = [];
@@ -341,6 +261,79 @@ export class BuhMainComponent implements OnInit {
     });
   }
 
+  filterCopyDateFrom: string = '';
+  filterCopyDateTo: string = '';
+  filterOrigDateFrom: string = '';
+  filterOrigDateTo: string = '';
+  syncFilterDate(name: string = 'all'): void {
+    switch (name) {
+      case 'all':
+        this.filterCopyDateFrom = this.filter.copyDate.from
+          .toString()
+          .split('T')[0];
+        this.filterCopyDateTo = this.filter.copyDate.to
+          .toString()
+          .split('T')[0];
+        this.filterOrigDateFrom = this.filter.origDate.from
+          .toString()
+          .split('T')[0];
+        this.filterOrigDateTo = this.filter.origDate.to
+          .toString()
+          .split('T')[0];
+        break;
+      case 'copyDateFrom':
+        // if (this.filterCopyDateFrom === '')
+        //   this.filterCopyDateFrom = this.filter.copyDate.from
+        //     .toString()
+        //     .split('T')[0];
+        // else
+        this.filter.copyDate.from = new Date(this.filterCopyDateFrom);
+        break;
+      case 'copyDateTo':
+        // if (this.filterCopyDateTo === '')
+        //   this.filterCopyDateTo = this.filter.copyDate.to
+        //     .toString()
+        //     .split('T')[0];
+        // else
+        this.filter.copyDate.to = new Date(this.filterCopyDateTo);
+        break;
+      case 'origDateFrom':
+        // if (this.filterOrigDateFrom === '')
+        //   this.filterOrigDateFrom = this.filter.origDate.from
+        //     .toString()
+        //     .split('T')[0];
+        // else
+        this.filter.origDate.from = new Date(this.filterOrigDateFrom);
+        break;
+      case 'origDateTo':
+        // if (this.filterOrigDateTo === '')
+        //   this.filterOrigDateTo = this.filter.origDate.to
+        //     .toString()
+        //     .split('T')[0];
+        // else
+        this.filter.origDate.to = new Date(this.filterOrigDateTo);
+        break;
+    }
+  }
+  setFilterDateToDefault(name: string) {
+    switch (name) {
+      case 'copyDate':
+        this.filterCopyDateFrom = '';
+        this.filterCopyDateTo = '';
+        this.filter.copyDate.from = new Date(2000, 0, 0);
+        this.filter.copyDate.to = new Date(2100, 0, 0);
+        this.filter.copyDate.null = true;
+        break;
+      case 'origDate':
+        this.filterOrigDateFrom = '';
+        this.filterOrigDateTo = '';
+        this.filter.origDate.from = new Date(2000, 0, 0);
+        this.filter.origDate.to = new Date(2100, 0, 0);
+        this.filter.origDate.null = true;
+        break;
+    }
+  }
+
   onChange(row: BuhMainTable, key: string, value: any = null): void {
     switch (key) {
       case 'sumClosing':
@@ -382,6 +375,7 @@ export class BuhMainComponent implements OnInit {
     this.editedRows.push(row);
   }
 
+  selectedRow: BuhMainTable | null = null;
   toggleSelected(row: BuhMainTable) {
     if (this.selectedRow === row) this.selectedRow = null;
     else this.selectedRow = row;
