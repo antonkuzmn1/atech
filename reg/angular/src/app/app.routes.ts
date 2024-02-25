@@ -8,16 +8,23 @@ import { HomeComponent } from './home/home.component';
 import { LogComponent } from './log/log.component';
 
 export const routes: Routes = [
-    { path: 'home', component: HomeComponent },
-    {
-        path: 'buh', component: BuhComponent, children: [
-            { path: 'auth', component: BuhAuthComponent },
-            { path: 'main', component: BuhMainComponent },
-            { path: 'all', component: BuhAllComponent },
-            { path: 'import', component: BuhImportComponent },
-        ]
-    },
-    { path: 'log', component: LogComponent },
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: '**', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  {
+    path: 'buh',
+    component: BuhComponent,
+    children: [
+      { path: 'auth', component: BuhAuthComponent },
+      { path: 'main/:year/:month', component: BuhMainComponent },
+      {
+        path: 'main',
+        redirectTo: 'main/0/0',
+        pathMatch: 'full',
+      },
+      { path: 'all', component: BuhAllComponent },
+      { path: 'import', component: BuhImportComponent },
+    ],
+  },
+  { path: 'log', component: LogComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

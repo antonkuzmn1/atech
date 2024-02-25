@@ -1,47 +1,47 @@
-import { Injectable } from "@angular/core"
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class BuhMainFilter {
+  public inputDate: { from: Date; to: Date } = {
+    from: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+    to: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+  };
 
-    public inputDate: { from: Date, to: Date } = {
-        from: new Date(new Date().getFullYear(), new Date().getMonth()-10, 1),
-        to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-    }
+  public inputDate_string: string = '';
 
-    public contractor: number[] = []
+  public contractor: number[] = [];
 
-    public initiator: number[] = []
+  public initiator: number[] = [];
 
-    public destination: string = ""
+  public destination: string = '';
 
-    public sum: { from: number, to: number } = {
-        from: 0,
-        to: 99999999999
-    }
+  public sum: { from: number; to: number } = {
+    from: 0,
+    to: 99999999999,
+  };
 
-    public sumClosing: { from: number, to: number } = {
-        from: 0,
-        to: 99999999999
-    }
+  public sumClosing: { from: number; to: number } = {
+    from: 0,
+    to: 99999999999,
+  };
 
-    public about: number[] = []
+  public about: number[] = [];
 
-    public mark: number[] = []
+  public mark: number[] = [];
 
-    public status: number[] = []
+  public status: number[] = [];
 
-    public copyDate: { from: Date, to: Date, null: boolean } = {
-        from: new Date(2000, 0, 0),
-        to: new Date(2100, 0, 0),
-        null: true
-    }
+  public copyDate: { from: Date; to: Date; null: boolean } = {
+    from: new Date(2000, 0, 0),
+    to: new Date(2100, 0, 0),
+    null: true,
+  };
 
-    public origDate: { from: Date, to: Date, null: boolean } = {
-        from: new Date(2000, 0, 0),
-        to: new Date(2100, 0, 0),
-        null: true
-    }
+  public origDate: { from: Date; to: Date; null: boolean } = {
+    from: new Date(2000, 0, 0),
+    to: new Date(2100, 0, 0),
+    null: true,
+  };
 
-    public title: string = ""
-
+  public title: string = '';
 }

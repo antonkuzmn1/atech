@@ -21,8 +21,8 @@
     resize: both;
     box-shadow: $shadowDefault;
     margin-top: 1px;
-    margin-left: -1px;
-    border: 1px solid $colorDefault_hover;
+    // margin-left: -1px;
+    border-top: 1px solid $colorDefault_hover;
   }
 }
 

@@ -7,6 +7,7 @@
     outline: none;
     padding: 0px;
     text-align: center;
+    font-family: $font_family_default;
 }
 
 @mixin inputDefault {
@@ -14,7 +15,8 @@
         width: calc(100% - 20px);
     }
     &[type="text"],
-    &[type="password"] {
+    &[type="password"],
+    &[type="search"] {
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;
@@ -64,7 +66,8 @@
         //     background-color: $colorDefault_focus;
         // }
     }
-    &[type="date"] {
+    &[type="date"],
+    &[type="month"] {
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;

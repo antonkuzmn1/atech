@@ -20,12 +20,10 @@ export class BuhMainService {
     private url: string = this.gv.auto() + "buh/table/main"
 
     public get(): Observable<BuhMainTable[]> {
-        console.log(this.filter)
         return this.http.post<BuhMainTable[]>(this.url, JSON.stringify(this.filter), this.gv.cookie)
     }
 
     public edit(data: BuhMainTable[]): Observable<boolean> {
-        console.log(data)
         return this.http.post<boolean>(this.url + "/edit", JSON.stringify(data), this.gv.cookie)
     }
 

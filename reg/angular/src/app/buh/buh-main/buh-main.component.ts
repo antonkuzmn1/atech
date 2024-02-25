@@ -1,7 +1,9 @@
 import { DatePipe, JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Variables } from '../../common/variables';
 import { BuhDropdownList } from '../classes/buh-dropdown-list';
 import { BuhEntityIdNameBool } from '../classes/buh-entity-id-name-bool';
 import { BuhMainService } from './buh-main.service';
@@ -24,7 +26,24 @@ import { BuhMainTable } from './classes/buh-main-table';
   styleUrl: '../../../styles/components/buh-main.scss',
 })
 export class BuhMainComponent implements OnInit {
-  constructor(private service: BuhMainService, public filter: BuhMainFilter) {}
+  constructor(
+    private service: BuhMainService,
+    public filter: BuhMainFilter,
+    private route: ActivatedRoute,
+    private vars: Variables,
+    private router: Router
+  ) {}
+
+  year: number = 0;
+  month: number = 0;
+
+  assetLoading: string = 'assets/loading.gif';
+  assetNotFound: string = 'assets/notfound.jpg';
+  loadingPage: string = this.assetLoading;
+
+  textLoading: string = 'Загрузка...';
+  textNotFound: string = 'Ничего не найдено :(';
+  loadingPlate: string = this.textLoading;
 
   table: BuhMainTable[] = [];
   editedRows: BuhMainTable[] = [];
@@ -36,6 +55,7 @@ export class BuhMainComponent implements OnInit {
   marks: BuhEntityIdNameBool[] = [];
   statuses: BuhEntityIdNameBool[] = [];
 
+  selectedRow: BuhMainTable | null = null;
   isChanged: boolean = false;
   filterIsOpened: boolean[] = [
     false,
@@ -51,59 +71,140 @@ export class BuhMainComponent implements OnInit {
     false,
     false,
   ];
+  filterInputDateString: string = '';
+  filterCopyDateFrom: string = '';
+  filterCopyDateTo: string = '';
+  filterOrigDateFrom: string = '';
+  filterOrigDateTo: string = '';
+  syncFilterDate(name: string = 'all', reset: boolean = false): void {
+    switch (name) {
+      case 'all':
+        this.filterCopyDateFrom = this.filter.copyDate.from
+          .toString()
+          .split('T')[0];
+        this.filterCopyDateTo = this.filter.copyDate.to
+          .toString()
+          .split('T')[0];
+        this.filterOrigDateFrom = this.filter.origDate.from
+          .toString()
+          .split('T')[0];
+        this.filterOrigDateTo = this.filter.origDate.to
+          .toString()
+          .split('T')[0];
+        break;
+      case 'copyDateFrom':
+        if (this.filterCopyDateFrom === '')
+          this.filterCopyDateFrom = this.filter.copyDate.from
+            .toString()
+            .split('T')[0];
+        else this.filter.copyDate.from = new Date(this.filterCopyDateFrom);
+        break;
+      case 'copyDateTo':
+        if (this.filterCopyDateTo === '')
+          this.filterCopyDateTo = this.filter.copyDate.to
+            .toString()
+            .split('T')[0];
+        else this.filter.copyDate.to = new Date(this.filterCopyDateTo);
+        break;
+      case 'origDateFrom':
+        if (this.filterOrigDateFrom === '')
+          this.filterOrigDateFrom = this.filter.origDate.from
+            .toString()
+            .split('T')[0];
+        else this.filter.origDate.from = new Date(this.filterOrigDateFrom);
+        break;
+      case 'origDateTo':
+        if (this.filterOrigDateTo === '')
+          this.filterOrigDateTo = this.filter.origDate.to
+            .toString()
+            .split('T')[0];
+        else this.filter.origDate.to = new Date(this.filterOrigDateTo);
+        break;
+    }
+  }
+  setFilterDateToDefault(name: string) {
+    switch (name) {
+      case 'copyDate':
+        this.filterCopyDateFrom = '';
+        this.filterCopyDateTo = '';
+        this.filter.copyDate.from = new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() - 1,
+          1
+        );
+        this.filter.copyDate.to = new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          0
+        );
+        this.filter.copyDate.null = true;
+        break;
+      case 'origDate':
+        this.filterOrigDateFrom = '';
+        this.filterOrigDateTo = '';
+        this.filter.origDate.from = new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() - 1,
+          1
+        );
+        this.filter.origDate.to = new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          0
+        );
+        this.filter.origDate.null = true;
+        break;
+    }
+  }
 
   ngOnInit(): void {
-    this.tableUpdate();
+    this.dateViaUrl().then(() => this.tableUpdate());
     this.getDropdowns();
     this.getContractors();
     this.getInitiators();
+    this.syncFilterDate();
   }
-  getDropdowns(): void {
-    this.service.getDropdowns().subscribe({
-      next: (data: BuhDropdownList) => {
-        this.dd = data;
-        this.abouts = [];
-        data.about.map((item) => {
-          if (this.contractorIsChecked(item.id))
-            this.abouts.push({ id: item.id, name: item.text, isChecked: true });
-          else
-            this.abouts.push({
-              id: item.id,
-              name: item.text,
-              isChecked: false,
-            });
-        });
-        this.marks = [];
-        data.mark.map((item) => {
-          if (this.contractorIsChecked(item.id))
-            this.marks.push({ id: item.id, name: item.text, isChecked: true });
-          else
-            this.marks.push({ id: item.id, name: item.text, isChecked: false });
-        });
-        this.statuses = [];
-        data.status.map((item) => {
-          if (this.contractorIsChecked(item.id))
-            this.statuses.push({
-              id: item.id,
-              name: item.text,
-              isChecked: true,
-            });
-          else
-            this.statuses.push({
-              id: item.id,
-              name: item.text,
-              isChecked: false,
-            });
-        });
-      },
+  allow(): boolean {
+    return this.service.allow();
+  }
+  filterInputDate(): void {
+    const year = +this.filterInputDateString.split('-')[0];
+    const month = +this.filterInputDateString.split('-')[1];
+    this.router.navigateByUrl(`buh/main/${year}/${month}`);
+    this.dateViaUrl().then(() => this.tableUpdate());
+  }
+  dateViaUrl(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.route.params.subscribe((params) => {
+        let updatedYear = false;
+        let updatedMonth = false;
+        if (params['year'] >= 2000 && params['year'] <= 2100) {
+          this.vars.buh.main.year.setYear(+params['year']);
+          updatedYear = true;
+        }
+        if (params['month'] >= 1 && params['month'] <= 12) {
+          this.vars.buh.main.month.setMonth(+params['month']);
+          updatedMonth = true;
+        }
+        const year = this.vars.buh.main.year.getYear();
+        const month = this.vars.buh.main.month.getMonth();
+        const yerMonString = (): string => {
+          if (month < 10) return `${year}-0${month}`;
+          else return `${year}-${month}`;
+        };
+        if (!updatedYear || !updatedMonth)
+          this.router.navigateByUrl(`buh/main/${year}/${month}`);
+        this.filterInputDateString = yerMonString();
+        resolve();
+      });
     });
   }
   getContractors(): void {
     this.service.getContractors().subscribe({
       next: (data: { id: number; name: string }[]) => {
         this.contractors = [];
-        data.map((item) => {
-          if (this.contractorIsChecked(item.id))
+        data.map((item): void => {
+          if (this.ddFilterManager.check('contractor', item.id))
             this.contractors.push({
               id: item.id,
               name: item.name,
@@ -128,8 +229,8 @@ export class BuhMainComponent implements OnInit {
     this.service.getInitiators().subscribe({
       next: (data: { id: number; name: string }[]) => {
         this.initiators = [];
-        data.map((item) => {
-          if (this.initiatorIsChecked(item.id))
+        data.map((item): void => {
+          if (this.ddFilterManager.check('initiator', item.id))
             this.initiators.push({
               id: item.id,
               name: item.name,
@@ -150,7 +251,53 @@ export class BuhMainComponent implements OnInit {
       },
     });
   }
+  getDropdowns(): void {
+    this.service.getDropdowns().subscribe({
+      next: (data: BuhDropdownList) => {
+        this.dd = data;
+        this.abouts = [];
+        data.about.map((item) => {
+          if (this.ddFilterManager.check('about', item.id))
+            this.abouts.push({ id: item.id, name: item.text, isChecked: true });
+          else
+            this.abouts.push({
+              id: item.id,
+              name: item.text,
+              isChecked: false,
+            });
+        });
+        this.marks = [];
+        data.mark.map((item) => {
+          if (this.ddFilterManager.check('mark', item.id))
+            this.marks.push({ id: item.id, name: item.text, isChecked: true });
+          else
+            this.marks.push({ id: item.id, name: item.text, isChecked: false });
+        });
+        this.statuses = [];
+        data.status.map((item) => {
+          if (this.ddFilterManager.check('status', item.id))
+            this.statuses.push({
+              id: item.id,
+              name: item.text,
+              isChecked: true,
+            });
+          else
+            this.statuses.push({
+              id: item.id,
+              name: item.text,
+              isChecked: false,
+            });
+        });
+      },
+    });
+  }
   tableUpdate(): void {
+    this.loadingPlate = this.textLoading;
+    this.loadingPage = this.assetLoading;
+    const year = this.vars.buh.main.year.getYear();
+    const month = this.vars.buh.main.month.getMonth();
+    this.filter.inputDate.from = new Date(year, month - 1, 1);
+    this.filter.inputDate.to = new Date(year, month, 0);
     this.service.get().subscribe({
       next: (data: BuhMainTable[]) => {
         this.table = data.map((row) => {
@@ -160,10 +307,14 @@ export class BuhMainComponent implements OnInit {
             row.origDate_string = row.origDate.toString().split('T')[0];
           return row;
         });
+        this.loadingPlate = '';
+        if (data.length === 0) {
+          this.loadingPage = this.assetNotFound;
+          this.loadingPlate = this.textNotFound;
+        }
       },
     });
   }
-
   control(row: BuhMainTable): number {
     switch (row.mark.id) {
       case 0:
@@ -177,6 +328,17 @@ export class BuhMainComponent implements OnInit {
       default:
         return 3;
     }
+  }
+  submit(): void {
+    this.service.edit(this.editedRows).subscribe({
+      next: (data: boolean) => {
+        if (data) {
+          this.editedRows = [];
+          this.isChanged = false;
+          this.tableUpdate();
+        }
+      },
+    });
   }
 
   onChange(row: BuhMainTable, key: string, value: any = null): void {
@@ -220,25 +382,9 @@ export class BuhMainComponent implements OnInit {
     this.editedRows.push(row);
   }
 
-  allow(): boolean {
-    return this.service.allow();
-  }
-
-  isExistsInEditedRows(id: number): boolean {
-    for (const row of this.editedRows) if (row.id === id) return true;
-    return false;
-  }
-
-  submit(): void {
-    this.service.edit(this.editedRows).subscribe({
-      next: (data: boolean) => {
-        if (data) {
-          this.editedRows = [];
-          this.isChanged = false;
-          this.tableUpdate();
-        }
-      },
-    });
+  toggleSelected(row: BuhMainTable) {
+    if (this.selectedRow === row) this.selectedRow = null;
+    else this.selectedRow = row;
   }
 
   filterToggle(key: number) {
@@ -249,50 +395,28 @@ export class BuhMainComponent implements OnInit {
   }
 
   toggleCheckbox(element: BuhEntityIdNameBool) {
-    const checkbox = document.getElementById(element.id.toString()) as HTMLInputElement;
+    const checkbox = document.getElementById(
+      element.id.toString()
+    ) as HTMLInputElement;
     element.isChecked = !element.isChecked;
     checkbox.checked = !checkbox.checked;
-  }
-
-  contractorFilterConfirm() {
-    this.filter.contractor = [];
-    this.contractors.map((item) => {
-      if (item.isChecked) this.filter.contractor.push(item.id);
-    });
-    this.tableUpdate();
-  }
-
-  contractorFilterReset() {
-    this.filter.contractor = [];
-    this.contractors.forEach((element) => (element.isChecked = false));
-    console.log(this.contractors);
-  }
-
-  contractorIsChecked(id: number) {
-    return this.filter.contractor.includes(id);
-  }
-
-  initiatorFilterConfirm() {
-    this.filter.initiator = [];
-    this.initiators.map((item) => {
-      if (item.isChecked) this.filter.initiator.push(item.id);
-    });
-    this.tableUpdate();
-  }
-
-  initiatorFilterReset() {
-    this.filter.initiator = [];
-    this.initiators.forEach((element) => (element.isChecked = false));
-    console.log(this.initiators);
-  }
-
-  initiatorIsChecked(id: number) {
-    return this.filter.initiator.includes(id);
   }
 
   ddFilterManager = {
     confirm: (name: string): void => {
       switch (name) {
+        case 'contractor':
+          this.filter.contractor = [];
+          this.contractors.map((item) => {
+            if (item.isChecked) this.filter.contractor.push(item.id);
+          });
+          break;
+        case 'initiator':
+          this.filter.initiator = [];
+          this.initiators.map((item) => {
+            if (item.isChecked) this.filter.initiator.push(item.id);
+          });
+          break;
         case 'about':
           this.filter.about = [];
           this.abouts.map((item) => {
@@ -300,15 +424,32 @@ export class BuhMainComponent implements OnInit {
           });
           break;
         case 'mark':
-          this.filter.about = [];
-          this.abouts.map((item) => {
-            if (item.isChecked) this.filter.about.push(item.id);
+          this.filter.mark = [];
+          this.marks.map((item) => {
+            if (item.isChecked) this.filter.mark.push(item.id);
           });
+          break;
+        case 'status':
+          this.filter.status = [];
+          this.statuses.map((item) => {
+            if (item.isChecked) this.filter.status.push(item.id);
+          });
+          break;
+        default:
+          throw new Error('o kurwa!');
       }
       this.tableUpdate();
     },
     reset: (name: string): void => {
       switch (name) {
+        case 'contractor':
+          this.filter.contractor = [];
+          this.contractors.forEach((element) => (element.isChecked = false));
+          break;
+        case 'initiator':
+          this.filter.initiator = [];
+          this.initiators.forEach((element) => (element.isChecked = false));
+          break;
         case 'about':
           this.filter.about = [];
           this.abouts.forEach((element) => (element.isChecked = false));
@@ -327,6 +468,10 @@ export class BuhMainComponent implements OnInit {
     },
     check: (name: string, id: number): boolean => {
       switch (name) {
+        case 'contractor':
+          return this.filter.contractor.includes(id);
+        case 'initiator':
+          return this.filter.initiator.includes(id);
         case 'about':
           return this.filter.about.includes(id);
         case 'mark':
