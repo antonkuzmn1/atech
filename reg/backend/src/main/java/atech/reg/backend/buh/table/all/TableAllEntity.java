@@ -56,7 +56,7 @@ public class TableAllEntity {
     @JsonProperty("origDate")
     private Date origDate;
 
-    @Column(nullable = true, length = 255)
+    @Column(nullable = false, length = 255)
     @JsonProperty("title")
     private String title;
 
@@ -66,7 +66,7 @@ public class TableAllEntity {
 
     @Column(nullable = false)
     @JsonProperty("number")
-    private int number;
+    private Double number;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -162,11 +162,11 @@ public class TableAllEntity {
         this.date = date;
     }
 
-    public int getNumber() {
+    public Double getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Double number) {
         this.number = number;
     }
 

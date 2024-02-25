@@ -16,7 +16,8 @@
     }
     &[type="text"],
     &[type="password"],
-    &[type="search"] {
+    &[type="search"],
+    & {
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;

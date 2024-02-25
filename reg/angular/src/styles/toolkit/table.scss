@@ -13,6 +13,7 @@
   font-weight: lighter;
   text-align: center;
 
+  & textarea,
   & input {
     @include inputDefault;
     width: 100%;

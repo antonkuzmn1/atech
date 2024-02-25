@@ -120,19 +120,6 @@ public class TableMainService {
                     origDateFrom, origDateTo, origDateNull,
                     title,
                     aboutIds, markIds, statusIds);
-            // return repo.getFilteredAll(
-            // inputDateFrom, inputDateTo,
-            // contractor,
-            // initiator,
-            // destination,
-            // sumFrom, sumTo,
-            // sumClosingFrom, sumClosingTo,
-            // copyDateFrom, copyDateTo, copyDateNull,
-            // origDateFrom, origDateTo, origDateNull,
-            // title,
-            // about,
-            // mark,
-            // status);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

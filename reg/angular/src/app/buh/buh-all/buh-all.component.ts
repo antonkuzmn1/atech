@@ -12,6 +12,7 @@ import { BuhEntityIdNameBool } from '../classes/buh-entity-id-name-bool';
 import { BuhAllService } from './buh-all.service';
 import { BuhAllFilter } from './classes/buh-all-filter';
 import { BuhAllFilterDate } from './classes/buh-all-filter-date';
+import { BuhAllNew } from './classes/buh-all-new';
 import { BuhAllTable } from './classes/buh-all-table';
 
 @Component({
@@ -32,13 +33,41 @@ import { BuhAllTable } from './classes/buh-all-table';
 export class BuhAllComponent implements OnInit {
   constructor(
     private service: BuhAllService,
-    private filter: BuhAllFilter,
+    public filter: BuhAllFilter,
     private route: ActivatedRoute,
     private vars: Variables,
     private router: Router,
     private session: SessionService,
-    private buhService: BuhService
-  ) {}
+    public buhService: BuhService,
+  ) { }
+
+  del() { if (confirm("Вы уверены?")) alert("Функция временно недоступна :(") }
+  insert() {
+    this.loadingElements.text = Dictionaries.path.status.loading.text
+    this.service.new(this.buhService.insertedRow).subscribe({
+      next: (data: boolean) => {
+        if (data) {
+          this.loadingElements.text = ''
+          this.tableUpdate()
+        }
+        else {
+          this.loadingElements.text = 'Произошла ошибка :('
+          setTimeout(() => this.loadingElements.text = '', 5000)
+        }
+      },
+      error: () => {
+        this.loadingElements.text = 'Произошла ошибка :('
+        setTimeout(() => this.loadingElements.text = '', 5000)
+      }
+    })
+  }
+  resetInsertBoofer(): void { this.buhService.insertedRow = new BuhAllNew() }
+  selectInsertBoofer(target: any) {
+    const status = this.statuses[target.value]
+    this.buhService.insertedRow.status.id = status.id;
+    this.buhService.insertedRow.status.text = status.name;
+    this.buhService.insertedRow.isDefault = false
+  }
 
   ngOnInit(): void {
     this.dateViaUrl().then(() => this.tableUpdate());
@@ -202,9 +231,9 @@ export class BuhAllComponent implements OnInit {
    * submin();
    * no need to put the array into function's input, that stored into memory
    *
-   * dictionary "loading" stores loading pages
+   * dictionary "loadingElements" stores loadingElements pages
    */
-  loading = {
+  loadingElements = {
     img: Dictionaries.path.status.loading.img,
     text: Dictionaries.path.status.loading.text,
   };
@@ -212,8 +241,8 @@ export class BuhAllComponent implements OnInit {
   editedRows: BuhAllTable[] = [];
   isChanged: boolean = false;
   tableUpdate(): void {
-    this.loading.text = Dictionaries.path.status.loading.text;
-    this.loading.img = Dictionaries.path.status.loading.img;
+    this.loadingElements.text = Dictionaries.path.status.loading.text;
+    this.loadingElements.img = Dictionaries.path.status.loading.img;
     const year = this.vars.buh.all.year.getYear();
     const month = this.vars.buh.all.month.getMonth();
     this.filter.inputDate.from = new Date(year, month - 1, 1);
@@ -227,10 +256,11 @@ export class BuhAllComponent implements OnInit {
             row.origDate_string = row.origDate.toString().split('T')[0];
           return row;
         });
-        this.loading.text = '';
+
+        this.loadingElements.text = '';
         if (data.length === 0) {
-          this.loading.img = Dictionaries.path.status.notFound.img;
-          this.loading.text = Dictionaries.path.status.notFound.text;
+          this.loadingElements.img = Dictionaries.path.status.notFound.img;
+          this.loadingElements.text = Dictionaries.path.status.notFound.text;
         }
       },
     });
@@ -312,7 +342,9 @@ export class BuhAllComponent implements OnInit {
         break;
       case 'initiator':
         row.initiator_isChanged = true;
-        row.initiator = this.initiators[value.value];
+        for (const elem of this.initiators)
+          if (elem.id === value.value) row.initiator = elem;
+        // row.initiator = this.initiators[value.value];
         break;
       case 'mark':
         row.mark_isChanged = true;
@@ -361,7 +393,7 @@ export class BuhAllComponent implements OnInit {
     false,
     false,
     false,
-    true,
+    false,
     false,
     false,
     false,

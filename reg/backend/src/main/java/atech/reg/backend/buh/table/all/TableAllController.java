@@ -3,7 +3,6 @@ package atech.reg.backend.buh.table.all;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,24 +17,24 @@ public class TableAllController {
     @Autowired
     private TableAllService service;
 
-    @GetMapping
-    public List<TableAllEntity> get() {
-        return service.get();
+    @PostMapping
+    public List<TableAllEntity> get(@RequestBody String data) {
+        return service.get(data);
     }
 
     @PostMapping("/insert")
-    public boolean insert(HttpSession session, @RequestBody String jsonString) {
-        return service.insert(session, jsonString);
+    public boolean insert(@RequestBody String data) {
+        return service.insert(data);
     }
 
     @PostMapping("/edit")
-    public boolean edit(HttpSession session, @RequestBody String jsonString) {
-        return service.edit(session, jsonString);
+    public boolean edit(HttpSession session, @RequestBody String data) {
+        return service.edit(session, data);
     }
 
     @PostMapping("/delete")
-    public boolean delete(HttpSession session, @RequestBody String jsonString) {
-        return service.delete(session, jsonString);
+    public boolean delete(HttpSession session, @RequestBody String data) {
+        return service.delete(session, data);
     }
 
 }

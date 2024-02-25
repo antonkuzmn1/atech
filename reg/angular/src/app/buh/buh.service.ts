@@ -2,11 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BackendConfig } from '../common/backend.config';
+import { BuhAllNew } from './buh-all/classes/buh-all-new';
 import { BuhDropdownList } from './classes/buh-dropdown-list';
 
 @Injectable({ providedIn: 'root' })
 export class BuhService {
   constructor(private http: HttpClient, private be: BackendConfig) {}
+
+  insertedRow: BuhAllNew = new BuhAllNew()
 
   getDropdowns(): Observable<BuhDropdownList> {
     return this.http.get<BuhDropdownList>(

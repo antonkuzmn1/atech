@@ -11,13 +11,8 @@ import { SessionService } from '../common/session.service';
   styleUrl: '../../styles/components/buh.scss',
 })
 export class BuhComponent implements OnInit {
-  constructor(private session: SessionService) {}
+  constructor(private session: SessionService) { }
 
-  ngOnInit(): void {
-    this.session.get();
-  }
-
-  allow(): boolean {
-    return this.session.allow([2]);
-  }
+  ngOnInit(): void { this.session.get() }
+  allow(): boolean { return this.session.allow([2]) }
 }
