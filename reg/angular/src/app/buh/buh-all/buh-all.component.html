@@ -56,7 +56,7 @@
         </div>
       </th>
       <th class="large">
-        <button (click)="filterToggle(2)">Наименование</button>
+        <button (click)="filterToggle(2)">Назначение</button>
         <div class="dropdown" style="height: auto; resize: none" *ngIf="filterIsOpened[2]">
           <input [(ngModel)]="filter.destination" type="search" placeholder="Поиск" />
           <div class="tools">
@@ -225,7 +225,7 @@
         </label>
       </div>
       <div class="plate-in-modal">
-        <label>Наименование:
+        <label>Назначение платежа:
           <input type="text" [(ngModel)]="formNew.destination">
         </label>
       </div>

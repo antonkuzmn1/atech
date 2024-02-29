@@ -61,7 +61,7 @@ public class BuhUploadController {
                     entity.setSumClosing(0D);
                     entity.setCopyDate(null);
                     entity.setOrigDate(null);
-                    entity.setTitle(null);
+                    entity.setTitle("");
                     entity.setAbout(dropdownService.getAboutById(0L));
                     entity.setMark(dropdownService.getMarkById(0L));
                     entity.setStatus(dropdownService.getStatusById(0L));
