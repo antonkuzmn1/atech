@@ -81,7 +81,6 @@
             placeholder="Минимальная дата" />
           <input (change)="syncFilterDate('mainDate', 'to')" [(ngModel)]="filter.mainDate.to" type="date"
             placeholder="Максимальная дата" />
-          <label><input type="checkbox" [(ngModel)]="filter.mainDate.isNull" />Показать строки без даты</label>
           <div class="tools">
             <button (click)="tableUpdate()">Применить</button>
             <button (click)="setFilterDateToDefault('mainDate')">Сбросить</button>
@@ -137,7 +136,6 @@
             placeholder="Минимальная дата" />
           <input (change)="syncFilterDate('copyDate', 'to')" [(ngModel)]="filter.copyDate.to" type="date"
             placeholder="Максимальная дата" />
-          <label><input type="checkbox" [(ngModel)]="filter.copyDate.isNull" />Показать строки без даты</label>
           <div class="tools">
             <button (click)="tableUpdate()">Применить</button>
             <button (click)="setFilterDateToDefault('copyDate')">Сбросить</button>
@@ -151,7 +149,6 @@
             placeholder="Минимальная дата" />
           <input (change)="syncFilterDate('origDate', 'to')" [(ngModel)]="filter.origDate.to" type="date"
             placeholder="Максимальная дата" />
-          <label><input type="checkbox" [(ngModel)]="filter.origDate.isNull" />Показать строки без даты</label>
           <div class="tools">
             <button (click)="tableUpdate()">Применить</button>
             <button (click)="setFilterDateToDefault('origDate')">Сбросить</button>
@@ -270,7 +267,7 @@
         </label>
       </div>
       <div class="plate-in-modal">
-        <button (click)="formNew.submit()">Добавить</button>
+        <button (click)="newRow()">Добавить</button>
         <button (click)="formNew.reset()">Сбросить</button>
       </div>
     </div>

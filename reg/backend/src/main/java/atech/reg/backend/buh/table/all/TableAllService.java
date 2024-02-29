@@ -14,6 +14,7 @@ import atech.reg.backend.Tools;
 import atech.reg.backend.buh.contractor.ContractorEntity;
 import atech.reg.backend.buh.contractor.ContractorService;
 import atech.reg.backend.buh.dropdown.BuhDropdownService;
+import atech.reg.backend.buh.dropdown.data.BuhDropdownMarkEntity;
 import atech.reg.backend.buh.dropdown.data.BuhDropdownStatusEntity;
 import atech.reg.backend.buh.initiator.InitiatorEntity;
 import atech.reg.backend.buh.initiator.InitiatorService;
@@ -69,13 +70,10 @@ public class TableAllService {
             Double numberTo = json.get("number").get("to").asDouble();
             Date copyDateFrom = tools.stringToDate(json.get("copyDate").get("from").asText());
             Date copyDateTo = tools.stringToDate(json.get("copyDate").get("to").asText());
-            boolean copyDateNull = json.get("copyDate").get("isNull").asBoolean();
             Date origDateFrom = tools.stringToDate(json.get("origDate").get("from").asText());
             Date origDateTo = tools.stringToDate(json.get("origDate").get("to").asText());
-            boolean origDateNull = json.get("origDate").get("isNull").asBoolean();
             Date mainDateFrom = tools.stringToDate(json.get("mainDate").get("from").asText());
             Date mainDateTo = tools.stringToDate(json.get("mainDate").get("to").asText());
-            boolean mainDateNull = json.get("mainDate").get("isNull").asBoolean();
             String title = json.get("title").asText();
             List<Long> markIds = objectMapper.convertValue(json.get("mark"), new TypeReference<List<Long>>() {
             });
@@ -98,13 +96,10 @@ public class TableAllService {
             // sb.append("numberTo: ").append(numberTo).append("\n");
             // sb.append("copyDateFrom: ").append(copyDateFrom).append("\n");
             // sb.append("copyDateTo: ").append(copyDateTo).append("\n");
-            // sb.append("copyDateNull: ").append(copyDateNull).append("\n");
             // sb.append("origDateFrom: ").append(origDateFrom).append("\n");
             // sb.append("origDateTo: ").append(origDateTo).append("\n");
-            // sb.append("origDateNull: ").append(origDateNull).append("\n");
             // sb.append("mainDateFrom: ").append(mainDateFrom).append("\n");
             // sb.append("mainDateTo: ").append(mainDateTo).append("\n");
-            // sb.append("mainDateNull: ").append(mainDateNull).append("\n");
             // sb.append("title: ").append(title).append("\n");
             // sb.append("mark: ").append(markIds).append("\n");
             // sb.append("status: ").append(statusIds).append("\n");
@@ -117,11 +112,12 @@ public class TableAllService {
                     destination,
                     sumFrom, sumTo,
                     numberFrom, numberTo,
-                    copyDateFrom, copyDateTo, copyDateNull,
-                    origDateFrom, origDateTo, origDateNull,
-                    mainDateFrom, mainDateTo, mainDateNull,
+                    copyDateFrom, copyDateTo,
+                    origDateFrom, origDateTo,
+                    mainDateFrom, mainDateTo,
                     title,
                     markIds, statusIds);
+            // System.out.println(entity.size());
             return entity;
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,12 +185,29 @@ public class TableAllService {
         return false;
     }
 
-    public boolean edit(HttpSession session, String jsonString) {
+    public boolean edit(HttpSession session, String data) {
         try {
-            System.out.println(jsonString);
-            // TableAllEntity entityNew = objectMapper.readValue(jsonString,
-            // TableAllEntity.class);
-            // TableAllEntity entity = getById(entityNew.getId());
+            System.out.println(data);
+            JsonNode jsonList = objectMapper.readTree(data);
+            for (JsonNode json : jsonList) {
+                Long id = json.get("id").asLong();
+                System.out.println("id: " + id);
+                InitiatorEntity initiator = initiatorService.insert(json.get("initiator").get("name").asText());
+                System.out.println("initiator: " + initiator.getName());
+                BuhDropdownMarkEntity mark = dropdownService.getMarkById(json.get("mark").get("id").asLong());
+                System.out.println("mark: " + mark.getText());
+                String title = json.get("title").asText();
+                System.out.println("title: " + title);
+
+                TableAllEntity entity = getById(id);
+                if (allow(session)) {
+                    entity.setInitiator(initiator);
+                    entity.setMark(mark);
+                }
+                entity.setTitle(title);
+                repo.save(entity);
+            }
+            // TableAllEntity entity = getById();
             // if (allow(session))
             // BeanUtils.copyProperties(entityNew, entity, "id");
             // else
@@ -209,15 +222,14 @@ public class TableAllService {
         return false;
     }
 
-    public boolean delete(HttpSession session, String jsonString) {
-        try {
-            getById(objectMapper.readTree(jsonString).get("id").asLong()).setDeleted(true);
-            ;
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+    // public boolean delete(HttpSession session, String jsonString) {
+    // try {
+    // getById(objectMapper.readTree(jsonString).get("id").asLong()).setDeleted(true);
+    // return true;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // return false;
+    // }
 
 }

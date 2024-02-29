@@ -23,12 +23,13 @@ public interface TableAllRepository extends JpaRepository<TableAllEntity, Long> 
                         "AND t.destination LIKE %:destination% " +
                         "AND t.sum BETWEEN :sumFrom AND :sumTo " +
                         "AND t.number BETWEEN :numberFrom AND :numberTo " +
-                        "AND ((:copyDateNull = true AND t.copyDate IS NULL) OR (t.copyDate BETWEEN :copyDateFrom AND :copyDateTo)) " +
-                        "AND ((:origDateNull = true AND t.origDate IS NULL) OR (t.origDate BETWEEN :origDateFrom AND :origDateTo)) " +
-                        "AND ((:mainDateNull = true AND t.date IS NULL) OR (t.date BETWEEN :mainDateFrom AND :mainDateTo)) " +
+                        "AND t.copyDate BETWEEN :copyDateFrom AND :copyDateTo " +
+                        "AND t.origDate BETWEEN :origDateFrom AND :origDateTo " +
+                        "AND t.date BETWEEN :mainDateFrom AND :mainDateTo " +
                         "AND t.title LIKE %:title% " +
                         "AND t.mark.id IN :markIds " +
-                        "AND t.status.id IN :statusIds")
+                        "AND t.status.id IN :statusIds " +
+                        "ORDER BY t.id DESC")
         List<TableAllEntity> getFilteredTest(
                         Date inputDateFrom, Date inputDateTo,
                         List<Long> contractorIds,
@@ -36,9 +37,9 @@ public interface TableAllRepository extends JpaRepository<TableAllEntity, Long> 
                         String destination,
                         Double sumFrom, Double sumTo,
                         Double numberFrom, Double numberTo,
-                        Date copyDateFrom, Date copyDateTo, boolean copyDateNull,
-                        Date origDateFrom, Date origDateTo, boolean origDateNull,
-                        Date mainDateFrom, Date mainDateTo, boolean mainDateNull,
+                        Date copyDateFrom, Date copyDateTo,
+                        Date origDateFrom, Date origDateTo,
+                        Date mainDateFrom, Date mainDateTo,
                         String title,
                         List<Long> markIds, List<Long> statusIds);
 }

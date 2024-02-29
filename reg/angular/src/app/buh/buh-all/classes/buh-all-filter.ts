@@ -5,7 +5,7 @@ import { BuhAllFilterDate } from './buh-all-filter-date';
 export class BuhAllFilter {
   public inputDate: { from: Date; to: Date } = {
     from: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
-    to: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+    to: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   };
   public copyDate: BuhAllFilterDate = {
     from: new Date(2000, 0, 0),

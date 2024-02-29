@@ -32,9 +32,9 @@ public class TableAllController {
         return service.edit(session, data);
     }
 
-    @PostMapping("/delete")
-    public boolean delete(HttpSession session, @RequestBody String data) {
-        return service.delete(session, data);
-    }
+    // @PostMapping("/delete")
+    // public boolean delete(HttpSession session, @RequestBody String data) {
+    //     return service.delete(session, data);
+    // }
 
 }

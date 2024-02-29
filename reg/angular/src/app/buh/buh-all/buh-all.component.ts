@@ -204,7 +204,7 @@ export class BuhAllComponent implements OnInit {
     const year = this.vars.buh.all.year.getYear();
     const month = this.vars.buh.all.month.getMonth();
     this.filter.inputDate.from = new Date(year, month - 1, 1);
-    this.filter.inputDate.to = new Date(year, month, 0);
+    this.filter.inputDate.to = new Date(year, month, 1);
     this.service.get().subscribe({
       next: (data: BuhAllTable[]) => {
         this.table = data.map((row) => {
@@ -221,7 +221,7 @@ export class BuhAllComponent implements OnInit {
           this.loadingElements.text = Dictionaries.path.status.notFound.text;
         }
       },
-      
+
     });
   }
   submit(): void {
@@ -234,6 +234,16 @@ export class BuhAllComponent implements OnInit {
         }
       },
     });
+  }
+  newRow(): void {
+    this.formNew.submit().then((value: boolean) => {
+      console.log(value);
+
+      if (value) {
+        this.modal.close()
+        this.tableUpdate()
+      }
+    })
   }
 
   /* DATE FILTERS
@@ -282,51 +292,53 @@ export class BuhAllComponent implements OnInit {
    */
   onChange(row: BuhAllTable, key: string, value: any = null): void {
     switch (key) {
-      case 'copyDate':
-        row.copyDate = new Date(row.copyDate_string);
-        row.copyDate_isChanged = true;
-        break;
-      case 'origDate':
-        row.origDate = new Date(row.origDate_string);
-        row.origDate_isChanged = true;
-        break;
-      case 'date':
-        row.date = new Date(row.date_string);
-        row.date_isChanged = true;
-        break;
+      // case 'copyDate':
+      //   row.copyDate = new Date(row.copyDate_string);
+      //   row.copyDate_isChanged = true;
+      //   break;
+      // case 'origDate':
+      //   row.origDate = new Date(row.origDate_string);
+      //   row.origDate_isChanged = true;
+      //   break;
+      // case 'date':
+      //   row.date = new Date(row.date_string);
+      //   row.date_isChanged = true;
+      //   break;
 
-      case 'contractor':
-        row.contractor_isChanged = true;
-        row.contractor = this.contractors[value.value];
-        break;
+      // case 'contractor':
+      //   row.contractor_isChanged = true;
+      //   row.contractor = this.contractors[value.value];
+      //   break;
       case 'initiator':
-        row.initiator_isChanged = true;
-        for (const elem of this.initiators)
-          if (elem.id === value.value) row.initiator = elem;
-        // row.initiator = this.initiators[value.value];
+        const newInitiator = this.initiators.find(val => val.id === parseInt(value.value))
+        if (newInitiator) {
+          row.initiator.id = newInitiator.id
+          row.initiator.name = newInitiator.name
+          row.initiator_isChanged = true
+        }
         break;
       case 'mark':
         row.mark_isChanged = true;
         row.mark = this.dd.mark[value.value];
         break;
-      case 'status':
-        row.status_isChanged = true;
-        row.status = this.dd.status[value.value];
-        break;
+      // case 'status':
+      //   row.status_isChanged = true;
+      //   row.status = this.dd.status[value.value];
+      //   break;
 
-      case 'destination':
-        row.destination_isChanged = true;
-        break;
+      // case 'destination':
+      //   row.destination_isChanged = true;
+      //   break;
       case 'title':
         row.title_isChanged = true;
         break;
 
-      case 'sum':
-        row.sum_isChanged = true;
-        break;
-      case 'number':
-        row.number_isChanged = true;
-        break;
+      // case 'sum':
+      //   row.sum_isChanged = true;
+      //   break;
+      // case 'number':
+      //   row.number_isChanged = true;
+      //   break;
     }
     this.isChanged = true;
     const id = row.id;
