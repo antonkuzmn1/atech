@@ -1,12 +1,9 @@
 @import "../variables";
 
 @mixin input {
-    // width: 100%;
-    // height: 100%;
     border: none;
     outline: none;
     padding: 0px;
-    text-align: center;
     font-family: $font_family_default;
 }
 
@@ -16,11 +13,11 @@
     }
     &[type="text"],
     &[type="password"],
-    &[type="search"],
-    & {
+    &[type="search"] {
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;
+        text-align: center;
 
         &:hover {
             background-color: $colorDefault_hover;
@@ -39,6 +36,7 @@
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;
+        text-align: center;
 
         &:hover {
             background-color: $colorDefault_hover;
@@ -54,24 +52,15 @@
         }
     }
     &[type="checkbox"] {
-        // @include input;
-        // background-color: $colorDefault;
-        // color: $colorDefault_forFont;
         width: 20px;
         height: 20px;
-
-        // &:hover {
-        //     background-color: $colorDefault_hover;
-        // }
-        // &:focus {
-        //     background-color: $colorDefault_focus;
-        // }
     }
     &[type="date"],
     &[type="month"] {
         @include input;
         background-color: $colorDefault;
         color: $colorDefault_forFont;
+        text-align: center;
 
         &:hover {
             background-color: $colorDefault_hover;

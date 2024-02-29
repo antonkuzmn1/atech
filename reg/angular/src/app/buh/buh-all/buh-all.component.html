@@ -1,20 +1,15 @@
 <section>
+
   <table class="header">
     <tr>
-      <th class="small"><button *ngIf="!buhService.insertedRow.isDefault"
-          (click)="resetInsertBoofer()">Сбросить</button></th>
       <th class="medium">
         <input type="month" (change)="filterInputDate()" [(ngModel)]="filterInputDateString" />
       </th>
       <th class="medium">{{ loadingElements.text }}</th>
       <th class="large"></th>
-      <th class="small">
-        <button *ngIf="isChanged" (click)="submit()">Применить</button>
-      </th>
-      <th class="small">
-        <button *ngIf="isChanged" (click)="tableUpdate()">Отменить</button>
-      </th>
-      <th class="small"></th>
+      <th class="small"><button *ngIf="isChanged" (click)="submit()">Применить</button></th>
+      <th class="small"><button *ngIf="isChanged" (click)="tableUpdate()">Отменить</button></th>
+      <th class="small"><button (click)="modal.open('Новая строка')">Добавить</button></th>
       <th class="small"></th>
       <th class="small"></th>
       <th class="small"></th>
@@ -22,7 +17,6 @@
       <th class="medium"></th>
     </tr>
     <tr>
-      <th class="small">Действие</th>
       <th class="medium">
         <button (click)="filterToggle(0)">Инициатор</button>
         <div class="dropdown" *ngIf="filterIsOpened[0]">
@@ -174,195 +168,112 @@
         </div>
       </th>
     </tr>
-    <tr>
-      <th class="small"><button (click)="insert()">Добавить</button></th>
-      <th class="medium"><input type="text" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.initiator" /></th>
-      <th class="medium"><input type="text" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.contractor" /></th>
-      <th class="large"><input type="text" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.destination" /></th>
-      <th class="small"><input type="number" min="0" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.number" /></th>
-      <th class="small"><input type="date" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.date" /></th>
-      <th class="small"><input type="number" min="0" step="1000" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.sum" /></th>
-      <th class="small"></th>
-      <th class="small">
-        <select (change)="selectInsertBoofer($event.target)">
-          <option *ngFor="let d of dd.status" [value]="d.id" [selected]="d.id === buhService.insertedRow.status.id">
-            {{ d.text }}
-          </option>
-        </select>
-      </th>
-      <th class="small"><input type="date" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.copyDate" /></th>
-      <th class="small"><input type="date" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.origDate" /></th>
-      <th class="medium"><input type="text" (change)="buhService.insertedRow.isDefault = false"
-          [(ngModel)]="buhService.insertedRow.title" /></th>
-    </tr>
   </table>
+
   <ng-container *ngIf="table.length !== 0; else loading">
     <table class="content">
       <tr *ngFor="let row of table" (click)="toggleSelected(row)" [class.selected]="row === selectedRow">
-        <td class="small"><button *ngIf="allow()" (click)="del()">Удалить</button></td>
         <td class="medium">
-          <select [ngClass]="{changed: row.initiator_isChanged}" (change)="onChange(row, 'initiator', $event.target)">
-            <option *ngFor="let initiator of initiators" [value]="initiator.id"
-              [selected]="initiator.id === row.initiator.id">{{initiator.name}}</option>
-          </select>
+          <ng-container *ngIf="allow(); else notAllow1">
+            <select [ngClass]="{changed: row.initiator_isChanged}" (change)="onChange(row, 'initiator', $event.target)">
+              <option *ngFor="let initiator of initiators" [value]="initiator.id"
+                [selected]="initiator.id === row.initiator.id">{{initiator.name}}</option>
+            </select>
+          </ng-container>
+          <ng-template #notAllow1>{{row.initiator.name}}</ng-template>
         </td>
-        <td class="medium">
-          <select [ngClass]="{changed: row.contractor_isChanged}" (change)="onChange(row, 'contractor', $event.target)">
-            <option *ngFor="let contractor of contractors" [value]="contractor.id"
-              [selected]="contractor.id === row.contractor.id">{{contractor.name}}</option>
-          </select>
-        </td>
-        <td class="large">
-          <textarea (change)="onChange(row, 'destination')" [(ngModel)]="row.destination"
-            [ngClass]="{ changed: row.destination_isChanged }" style="resize: vertical; margin-top: 3px;">
-          </textarea>
-        </td>
+        <td class="medium">{{row.contractor.name}}</td>
+        <td class="large">{{row.destination}}</td>
+        <td class="small">{{row.number}}</td>
+        <td class="small">{{row.date | date: 'dd MMM yyyy' }}</td>
+        <td class="small">{{row.sum}}</td>
         <td class="small">
-          <input type="number" (change)="onChange(row, 'number')" [(ngModel)]="row.number"
-            [ngClass]="{ changed: row.number_isChanged }" min="0" step="1" />
-        </td>
-        <td class="small">{{row.date_string}}</td>
-        <td class="small">
-          <input type="number" (change)="onChange(row, 'sum')" [(ngModel)]="row.sum"
-            [ngClass]="{ changed: row.sum_isChanged }" min="0" step="1000" />
-        </td>
-        <td class="small">
-          <ng-container *ngIf="allow(); else notAllow">
+          <ng-container *ngIf="allow(); else notAllow2">
             <select [ngClass]="{ changed: row.mark_isChanged }" (change)="onChange(row, 'mark', $event.target)">
               <option *ngFor="let d of dd.mark" [value]="d.id" [selected]="d.id === row.mark.id">{{ d.text }}</option>
             </select>
           </ng-container>
-          <ng-template #notAllow>{{ row.mark.text }}</ng-template>
+          <ng-template #notAllow2>{{row.mark.text}}</ng-template>
         </td>
-        <td class="small">
-          <select [ngClass]="{ changed: row.status_isChanged }" (change)="onChange(row, 'status', $event.target)">
-            <option *ngFor="let d of dd.status" [value]="d.id" [selected]="d.id === row.status.id">{{ d.text }}</option>
-          </select>
-        </td>
-        <td class="small">
-          <input type="date" (change)="onChange(row, 'copyDate')" [(ngModel)]="row.copyDate_string"
-            [ngClass]="{ changed: row.copyDate_isChanged }" [attr.readonly]="!allow() ? true : null" />
-        </td>
-        <td class="small">
-          <input type="date" (change)="onChange(row, 'origDate')" [(ngModel)]="row.origDate_string"
-            [ngClass]="{ changed: row.origDate_isChanged }" [attr.readonly]="!allow() ? true : null" />
-        </td>
+        <td class="small">{{row.status.text}}</td>
+        <td class="small">{{row.copyDate | date: 'dd MMM yyyy' }}</td>
+        <td class="small">{{row.origDate | date: 'dd MMM yyyy' }}</td>
         <td class="medium">
           <input type="text" (change)="onChange(row, 'title')" [(ngModel)]="row.title"
             [ngClass]="{ changed: row.title_isChanged }" />
         </td>
       </tr>
     </table>
-    <!-- <ng-container *ngIf="table.length !== 0; else loading">
-    <table class="content">
-      <tr
-        *ngFor="let row of table"
-        (click)="toggleSelected(row)"
-        [class.selected]="row === selectedRow"
-      >
-        <td class="medium">{{ row.contractor.name }}</td>
-        <td class="large">{{ row.destination }}</td>
-        <td class="medium">{{ row.initiator ? row.initiator.name : "" }}</td>
-        <td class="small">{{ row.sum }}</td>
-        <td class="small">
-          <input
-            type="number"
-            (change)="onChange(row, 'sumClosing')"
-            [(ngModel)]="row.sumClosing"
-            [ngClass]="{ changed: row.isChanged_sumClosing }"
-            min="0"
-            step="1000"
-          />
-        </td>
-        <td class="small">{{ dd.control[control(row)].text }}</td>
-        <td class="small">
-          <select
-            [ngClass]="{ changed: row.isChanged_about }"
-            (change)="onChange(row, 'about', $event.target)"
-          >
-            <option
-              *ngFor="let d of dd.about"
-              [value]="d.id"
-              [selected]="d.id === row.about.id"
-            >
-              {{ d.text }}
-            </option>
-          </select>
-        </td>
-        <td class="small">
-          <ng-container *ngIf="allow(); else notAllow">
-            <select
-              [ngClass]="{ changed: row.isChanged_mark }"
-              (change)="onChange(row, 'mark', $event.target)"
-            >
-              <option
-                *ngFor="let d of dd.mark"
-                [value]="d.id"
-                [selected]="d.id === row.mark.id"
-              >
-                {{ d.text }}
-              </option>
-            </select>
-          </ng-container>
-          <ng-template #notAllow>{{ row.mark.text }}</ng-template>
-        </td>
-        <td class="small">
-          <select
-            [ngClass]="{ changed: row.isChanged_status }"
-            (change)="onChange(row, 'status', $event.target)"
-          >
-            <option
-              *ngFor="let d of dd.status"
-              [value]="d.id"
-              [selected]="d.id === row.status.id"
-            >
-              {{ d.text }}
-            </option>
-          </select>
-        </td>
-        <td class="small">
-          <input
-            type="date"
-            (change)="onChange(row, 'copyDate')"
-            [(ngModel)]="row.copyDate_string"
-            [ngClass]="{ changed: row.isChanged_copyDate }"
-            [attr.readonly]="!allow() ? true : null"
-          />
-        </td>
-        <td class="small">
-          <input
-            type="date"
-            (change)="onChange(row, 'origDate')"
-            [(ngModel)]="row.origDate_string"
-            [ngClass]="{ changed: row.isChanged_origDate }"
-            [attr.readonly]="!allow() ? true : null"
-          />
-        </td>
-        <td class="medium">
-          <input
-            type="text"
-            (change)="onChange(row, 'title')"
-            [(ngModel)]="row.title"
-            [ngClass]="{ changed: row.isChanged_title }"
-          />
-        </td>
-      </tr>
-    </table>
-  </ng-container>
-  <ng-template #loading>
-    <div class="loading"><img [src]="loadingPage" /></div>
-  </ng-template> -->
   </ng-container>
   <ng-template #loading>
     <div class="loading"><img [src]="loadingElements.img" /></div>
   </ng-template>
+
+  <app-modal>
+    <div class="modal">
+      <div class="plate-in-modal">
+        <label>Инициатор:
+          <input list="initiators" type="search" [(ngModel)]="formNew.initiator">
+          <datalist id="initiators">
+            <option *ngFor="let initiator of initiators" [value]="initiator.name"></option>
+          </datalist>
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Контрагент:
+          <input list="contractors" type="text" [(ngModel)]="formNew.contractor">
+          <datalist id="contractors">
+            <option *ngFor="let contractor of contractors" [value]="contractor.name"></option>
+          </datalist>
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Наименование:
+          <input type="text" [(ngModel)]="formNew.destination">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Номер документа:
+          <input type="number" [(ngModel)]="formNew.number">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Дата документа:
+          <input type="date" [(ngModel)]="formNew.date">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Сумма:
+          <input type="number" step="1000" [(ngModel)]="formNew.sum">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Статус:
+          <select [(ngModel)]="formNew.status.id">
+            <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option>
+          </select>
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Дата предоставления копии:
+          <input type="date" [(ngModel)]="formNew.copyDate">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Дата предоставления оригинала:
+          <input type="date" [(ngModel)]="formNew.origDate">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <label>Комментарий:
+          <input type="text" placeholder="Необязательное поле" [(ngModel)]="formNew.title">
+        </label>
+      </div>
+      <div class="plate-in-modal">
+        <button (click)="formNew.submit()">Добавить</button>
+        <button (click)="formNew.reset()">Сбросить</button>
+      </div>
+    </div>
+  </app-modal>
 
 </section>

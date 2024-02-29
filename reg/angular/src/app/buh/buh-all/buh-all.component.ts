@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Dictionaries } from '../../common/dictionaries';
+import { ModalComponent } from '../../common/modal.component';
 import { SessionService } from '../../common/session.service';
 import { Variables } from '../../common/variables';
 import { BuhService } from '../buh.service';
@@ -26,6 +27,7 @@ import { BuhAllTable } from './classes/buh-all-table';
     NgxMaskDirective,
     JsonPipe,
     DatePipe,
+    ModalComponent,
   ],
   templateUrl: './buh-all.component.html',
   styleUrl: '../../../styles/components/buh-all.scss',
@@ -39,35 +41,9 @@ export class BuhAllComponent implements OnInit {
     private router: Router,
     private session: SessionService,
     public buhService: BuhService,
+    public modal: ModalComponent,
+    public formNew: BuhAllNew,
   ) { }
-
-  del() { if (confirm("Вы уверены?")) alert("Функция временно недоступна :(") }
-  insert() {
-    this.loadingElements.text = Dictionaries.path.status.loading.text
-    this.service.new(this.buhService.insertedRow).subscribe({
-      next: (data: boolean) => {
-        if (data) {
-          this.loadingElements.text = ''
-          this.tableUpdate()
-        }
-        else {
-          this.loadingElements.text = 'Произошла ошибка :('
-          setTimeout(() => this.loadingElements.text = '', 5000)
-        }
-      },
-      error: () => {
-        this.loadingElements.text = 'Произошла ошибка :('
-        setTimeout(() => this.loadingElements.text = '', 5000)
-      }
-    })
-  }
-  resetInsertBoofer(): void { this.buhService.insertedRow = new BuhAllNew() }
-  selectInsertBoofer(target: any) {
-    const status = this.statuses[target.value]
-    this.buhService.insertedRow.status.id = status.id;
-    this.buhService.insertedRow.status.text = status.name;
-    this.buhService.insertedRow.isDefault = false
-  }
 
   ngOnInit(): void {
     this.dateViaUrl().then(() => this.tableUpdate());
@@ -83,9 +59,7 @@ export class BuhAllComponent implements OnInit {
    *
    * tip: first id already putted in SessionConfig as default
    */
-  allow(): boolean {
-    return this.session.allow([2]);
-  }
+  allow(): boolean { return this.session.allow([2]) }
 
   /* ROUTING TOOLS
    * filterInputDate() can get the year and mon from template's input
@@ -168,17 +142,9 @@ export class BuhAllComponent implements OnInit {
         this.initiators = [];
         data.map((item): void => {
           if (this.ddFilterManager.check('initiator', item.id))
-            this.initiators.push({
-              id: item.id,
-              name: item.name,
-              isChecked: true,
-            });
+            this.initiators.push({ id: item.id, name: item.name, isChecked: true, });
           else
-            this.initiators.push({
-              id: item.id,
-              name: item.name,
-              isChecked: false,
-            });
+            this.initiators.push({ id: item.id, name: item.name, isChecked: false, });
         });
         this.initiators.sort((a, b) => {
           if (a.name < b.name) return -1;
@@ -205,17 +171,9 @@ export class BuhAllComponent implements OnInit {
         this.statuses = [];
         data.status.map((item) => {
           if (this.ddFilterManager.check('status', item.id))
-            this.statuses.push({
-              id: item.id,
-              name: item.text,
-              isChecked: true,
-            });
+            this.statuses.push({ id: item.id, name: item.text, isChecked: true, });
           else
-            this.statuses.push({
-              id: item.id,
-              name: item.text,
-              isChecked: false,
-            });
+            this.statuses.push({ id: item.id, name: item.text, isChecked: false, });
         });
       },
     });
@@ -263,6 +221,7 @@ export class BuhAllComponent implements OnInit {
           this.loadingElements.text = Dictionaries.path.status.notFound.text;
         }
       },
+      
     });
   }
   submit(): void {
@@ -486,7 +445,7 @@ export class BuhAllComponent implements OnInit {
         case 'mark':
           return this.filter.mark.includes(id);
         case 'status':
-          return this.filter.mark.includes(id);
+          return this.filter.status.includes(id);
         default:
           throw new Error('o kurwa!');
       }

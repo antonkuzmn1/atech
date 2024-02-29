@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { routes } from './app.routes';
 import { BackendConfig } from './common/backend.config';
+import { ModalComponent } from './common/modal.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(HttpClientModule),
     provideEnvironmentNgxMask(),
     BackendConfig,
+    ModalComponent,
   ],
 };
